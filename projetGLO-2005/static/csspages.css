@@ -1,0 +1,34 @@
+body {
+    background-color: aquamarine;
+}
+
+
+.centre {
+    text-align: center;
+    color: lightsalmon;
+}
+
+p {
+	font-family: "Times New Roman";
+	color: darkblue;
+	font-weight: bold;
+    font-size: xxx-large;
+    text-align: center;
+}
+
+button {
+    font-size: 40px;
+    padding: 10px 24px;
+    border-radius: 20px;
+    border: 6px solid red;
+    background-color: blueviolet;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+input {
+    	font-family: "Times New Roman";
+	color: black;
+	font-weight: bold;
+    font-size: xxx-large;
+}

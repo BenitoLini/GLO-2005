@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>Login BoomBird</title>
+<link rel="stylesheet" type="text/css" href="../static/csspages.css">
+<script type="text/javascript" src="../static/jscode.js"></script>
+</head>
+<body onload="SupprimerContenu()">
+<p class="centre">Bonjour, veuillez entrer vos informations</p>
+<form action="principal" method="post">
+<p>Votre courriel: <input type="text" name="email"><br>
+Votre mot de passe: <input type="password" name="hash">
+</p><br>
+    <div class="centre">
+        <p>Utilisateur<input type="radio" name="utilisateurcreateur" value="utilisateur" checked>
+Createur<input type="radio" name="utilisateurcreateur" value="createur">
+    </div>
+
+</p>
+    <div class="centre">
+       <input type="submit" value="Identification" name="soumettre">
+    </div>
+
+
+</form>
+
+
+{% if message %}
+<div id="cadre">{{ message }}"</div>
+{% endif %}
+
+
+</body>
+</html>
