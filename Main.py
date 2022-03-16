@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import pymysql, pymysql.cursors
+import random
 from Boomer import Boomer
 
 app = Flask(__name__)
@@ -9,7 +10,19 @@ connection = pymysql.connect(host='localhost', user='root', password='Glo2005$$'
 
 @app.route("/")
 def main():
-    return render_template('page1HTML.html')
+    cmd = 'SELECT path FROM Gifs'
+    cur = connection.cursor()
+    cur.execute(cmd)
+    info = cur.fetchall()
+    info = list(info)
+    random.shuffle(info)
+    global ProfileUtilisateur
+    if len(info) <= 24:
+        ProfileUtilisateur["paths"] = info
+    else:
+        ProfileUtilisateur["paths"] = info[0:24]
+    ProfileUtilisateur["long"] = len(info)
+    return render_template('page1HTML.html', profile=ProfileUtilisateur)
 
 @app.route("/login")
 def login():
