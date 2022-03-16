@@ -5,7 +5,7 @@
 <script type="text/javascript" src="../static/jscode.js"></script>
 </head>
 <body onload="SupprimerContenu()">
-<p class="centre">Bonjour, veuillez entrer vos informations</p>
+<header>Bonjour, veuillez entrer vos informations</header>
 <form action="principal" method="post">
 <p>Votre courriel: <input type="text" name="email"><br>
 Votre mot de passe: <input type="password" name="hash">
@@ -25,7 +25,7 @@ Createur<input type="radio" name="utilisateurcreateur" value="createur">
 
 
 {% if message %}
-<div id="cadre">{{ message }}"</div>
+<div id="cadre" class="mes">{{ message }}"</div>
 {% endif %}
 
 

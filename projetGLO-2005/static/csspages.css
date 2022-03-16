@@ -1,27 +1,32 @@
 body {
-    background-color: aquamarine;
+    background-color: black;
 }
 
 
 .centre {
     text-align: center;
-    color: lightsalmon;
+    color: white;
 }
 
-p {
-	font-family: "Times New Roman";
-	color: darkblue;
+header {
+    font-family: "Times New Roman";
+	color: white;
 	font-weight: bold;
     font-size: xxx-large;
     text-align: center;
 }
 
+p {
+	font-family: "Times New Roman";
+	color: white;
+	font-weight: bold;
+    font-size: x-large;
+    text-align: center;
+}
+
 button {
-    font-size: 40px;
+    font-size: 20px;
     padding: 10px 24px;
-    border-radius: 20px;
-    border: 6px solid red;
-    background-color: blueviolet;
     margin-left: 20px;
     margin-right: 20px;
 }
@@ -30,5 +35,13 @@ input {
     	font-family: "Times New Roman";
 	color: black;
 	font-weight: bold;
-    font-size: xxx-large;
+    font-size: x-large;
+}
+
+img {
+    Padding: 20px;
+}
+
+.mes {
+    color: white;
 }

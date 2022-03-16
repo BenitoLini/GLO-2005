@@ -6,12 +6,15 @@
 </head>
 <body onload="SupprimerContenu()">
 
-    <p class="centre">Bonjour, bienvenue sur BoomBird</p>
+<header>Bonjour, bienvenue sur BoomBird</header>
 <div class="centre">
     <a href=login><button>login</button>
     <a href=signup><button>Sign up</button></a>
     </a></div>
 
+{% for P in profile.paths %}
+        <img src={{P[0]}} width="200" height="200">
+{% endfor %}
 
 
 
