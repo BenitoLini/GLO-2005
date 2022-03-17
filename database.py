@@ -3,7 +3,7 @@ import random
 
 connection = pymysql.connect(
     host="localhost",
-    user = "root",
+    user="root",
     password="Glo2005$$",
     db="projetglo2005",
     autocommit=True
@@ -11,13 +11,16 @@ connection = pymysql.connect(
 
 cursor = connection.cursor()
 
+
 def insert_utilisateur(Uid, avatar, hash, email, age, username, nom):
     request = f"""INSERT INTO utilisateurs VALUE({Uid}, {avatar}, {hash}, {email}, {age}, {username}, {nom});"""
     cursor.execute(request)
 
+
 def insert_createur(Uid, avatar, hash, email, age, username, nom):
     request = f"""INSERT INTO createurs VALUE({Uid}, {avatar}, {hash}, {email}, {age}, {username}, {nom});"""
     cursor.execute(request)
+
 
 def select_hash_utilisateur(email):
     request = f"""SELECT * FROM utilisateurs WHERE email={email};"""
@@ -25,11 +28,13 @@ def select_hash_utilisateur(email):
     user = cursor.fetchone()
     return user
 
+
 def select_hash_createur(email):
     request = f"""SELECT * FROM createurs WHERE email={email};"""
     cursor.execute(request)
     user = cursor.fetchone()
     return user
+
 
 def select_24_gif_paths():
     request = 'SELECT path FROM Gifs'
@@ -41,8 +46,8 @@ def select_24_gif_paths():
     random.shuffle(info)
     return info
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     print(select_24_gif_paths())
     print(select_hash_utilisateur("gabrieljeanson@outlook.fr"))
     print(select_hash_createur("w42342"))

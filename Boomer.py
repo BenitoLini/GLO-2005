@@ -1,15 +1,21 @@
 import pymysql
+import hashlib
+import random
+import string
 
 
 class Boomer:
-    COOKIE_ID = ""
+    COOKIE = ""
     UID = None
     IS_CREATEUR = False
+    CURSOR = None
 
     def __init__(self, connection: pymysql.Connection, uid, is_createur=False):
         self.connection = connection
+        self.CURSOR = connection.cursor()
         self.UID = uid
         self.IS_CREATEUR = is_createur
+        self.COOKIE = Boomer.generate_cookie(uid)
 
     def post(self):
         if not self.IS_CREATEUR:
@@ -18,17 +24,20 @@ class Boomer:
     def getUid(self):
         return self.UID
 
+    def getCookie(self):
+        return self.COOKIE
+
     def getAvatar(self):
-        self.connection.cursor().execute(f'SELECT avatar FROM utilisateurs WHERE uid={self.UID};')
-        return self.connection.cursor().fetchone()[0]
+        self.CURSOR.execute(f'SELECT avatar FROM utilisateurs WHERE uid={self.UID};')
+        return self.CURSOR.fetchone()[0]
 
     def getHash(self):
-        self.connection.cursor().execute(f'SELECT hash FROM utilisateurs WHERE uid={self.UID};')
-        return self.connection.cursor().fetchone()[0]
+        self.CURSOR.execute(f'SELECT hash FROM utilisateurs WHERE uid={self.UID};')
+        return self.CURSOR.fetchone()[0]
 
     def getUsername(self):
-        self.connection.cursor().execute(f'SELECT username FROM utilisateurs WHERE uid={self.UID};')
-        return self.connection.cursor().fetchone()[0]
+        self.CURSOR.execute(f'SELECT username FROM utilisateurs WHERE uid={self.UID};')
+        return self.CURSOR.fetchone()[0]
 
     def setAvatar(self):
         # 1) Upload File dossier avatars
@@ -37,6 +46,13 @@ class Boomer:
         pass
 
     @staticmethod
-    def getUtilisateur(connection: pymysql.Connection, email, hash):
-        uid = connection.cursor().execute(f'SELECT uid FROM utilisateurs WHERE email={email} AND hash={hash};')
+    def generate_cookie(uid):
+        fill = "".join(random.choice(string.ascii_lowercase) for i in range(20))
+        return hashlib.sha256(f"{uid}{fill}".encode()).hexdigest()
+
+    @staticmethod
+    def getUtilisateur(connection: pymysql.Connection, email, hash_):
+        cursor = connection.cursor()
+        cursor.execute(f'SELECT uid FROM utilisateurs WHERE (email={email});')
+        uid = cursor.fetchone()[0]
         return Boomer(connection, uid)
