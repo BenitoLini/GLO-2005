@@ -2,27 +2,18 @@ from flask import Flask, render_template, request
 import pymysql, pymysql.cursors
 import random
 from Boomer import Boomer
+import database
 
 app = Flask(__name__)
-ProfileUtilisateur = {}
-
-connection = pymysql.connect(host='localhost', user='root', password='Glo2005$$', db='projetglo2005')
+GifPaths = {}
 
 @app.route("/")
 def main():
-    cmd = 'SELECT path FROM Gifs'
-    cur = connection.cursor()
-    cur.execute(cmd)
-    info = cur.fetchall()
-    info = list(info)
-    random.shuffle(info)
-    global ProfileUtilisateur
-    if len(info) <= 24:
-        ProfileUtilisateur["paths"] = info
-    else:
-        ProfileUtilisateur["paths"] = info[0:24]
-    ProfileUtilisateur["long"] = len(info)
-    return render_template('page1HTML.html', profile=ProfileUtilisateur)
+    info = database.select_24_gif_paths()
+    global GifPaths
+    GifPaths["paths"] = info
+    GifPaths["long"] = len(info)
+    return render_template('page1HTML.html', profile=GifPaths)
 
 @app.route("/login")
 def login():
@@ -39,26 +30,16 @@ def principal():
     UC = request.form.get('utilisateurcreateur')
 
     if UC == "utilisateur":
-        cmd='SELECT hash FROM utilisateurs WHERE email='+email+';'
+        passeVrai = database.select_hash_utilisateur(email)
     else:
-        cmd='SELECT hash FROM createurs WHERE email='+email+';'
-    cur = connection.cursor()
-    cur.execute(cmd)
-    passeVrai = cur.fetchone()
+        passeVrai = database.select_hash_createur(email)
 
-    if (passeVrai is not None) and (passe == passeVrai[0]):
+    if (passeVrai is not None) and (passe == passeVrai[2]):
 
         if UC == "utilisateur":
-            cmd='SELECT * FROM utilisateurs WHERE Email='+email+';'
+            return render_template('principal.html')
         else:
-            cmd = 'SELECT * FROM createurs WHERE Email=' + email + ';'
-        cur=connection.cursor()
-        cur.execute(cmd)
-
-        if UC == "utilisateur":
-            return render_template('principal.html', profile=ProfileUtilisateur)
-        else:
-            return render_template('createurs.html', profile=ProfileUtilisateur)
+            return render_template('createurs.html')
 
     return render_template('login.html', message="Informations invalides!")
 
@@ -76,20 +57,15 @@ def login2():
     if not UC:
         return render_template('signup.html')
 
-    conn= pymysql.connect(host='localhost',user='root', password='Glo2005$$',db='projetglo2005')
-    cur=conn.cursor()
     if UC == ['utilisateur']:
-        cmd='INSERT INTO utilisateurs VALUE('+Uid+', '+avatar+', '+hash+', '+email+', '+age+', '+username+', '+nom+');'
+        database.insert_utilisateur(Uid, avatar, hash, email, age, username, nom)
     elif UC == ['createur']:
-        cmd='INSERT INTO createurs VALUE('+Uid+', '+avatar+', '+hash+', '+email+', '+age+', '+username+', '+nom+');'
+        database.insert_createur(Uid, avatar, hash, email, age, username, nom)
     elif UC == ['utilisateur', 'createur']:
-        cmd='INSERT INTO utilisateurs VALUE('+Uid+', '+avatar+', '+hash+', '+email+', '+age+', '+username+', '+nom+');'
-        cmd2='INSERT INTO createurs VALUE('+Uid+', '+avatar+', '+hash+', '+email+', '+age+', '+username+', '+nom+');'
-        cur.execute(cmd2)
-    cur.execute(cmd)
-    conn.commit()
+        database.insert_utilisateur(Uid, avatar, hash, email, age, username, nom)
+        database.insert_createur(Uid, avatar, hash, email, age, username, nom)
 
-    return render_template('login.html', profile=ProfileUtilisateur)
+    return render_template('login.html')
 
 
 if __name__ == '__main__':
