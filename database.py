@@ -46,6 +46,14 @@ def select_24_gif_paths():
     random.shuffle(info)
     return info
 
+def select_all_gif_paths():
+    request = 'SELECT path FROM Gifs'
+    cursor.execute(request)
+    info = cursor.fetchall()
+    info = list(info)
+    random.shuffle(info)
+    return info
+
 
 if __name__ == "__main__":
     print(select_24_gif_paths())

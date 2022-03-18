@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request
 from Boomer import Boomer
 import database
+from hashlib import sha256
 
 app = Flask(__name__)
 GifPaths = {}
+Profile = {}
 
 sessions = dict()
 
@@ -11,7 +13,12 @@ sessions = dict()
 def add_boomer(boomer):
     cookie = boomer.getCookie()
     sessions[cookie] = boomer
-    final_response = app.make_response(render_template("principal.html"))
+    global Profile
+    Profile["avatar"] = boomer.getAvatar()
+    Profile["nom"] = boomer.getUsername()
+    info = database.select_all_gif_paths()
+    Profile["paths"] = info
+    final_response = app.make_response(render_template("principal.html", profile=Profile))
     final_response.set_cookie("session-id", value=cookie, max_age=60 * 15)  # TODO changer max_age
     return final_response, cookie
 
@@ -45,7 +52,13 @@ def redirect_logged_user(not_log_redirect=None, not_log_profile=None):
         if boomer is None:
             return render_template('login.html', message="Session expirée!")
 
-        return render_template("principal.html")
+        global Profile
+        Profile["avatar"] = boomer.getAvatar()
+        Profile["nom"] = boomer.getUsername()
+        info = database.select_all_gif_paths()
+        Profile["paths"] = info
+
+        return render_template("principal.html", profile=Profile)
 
     if not_log_redirect is None:
         return None
@@ -77,6 +90,8 @@ def principal():
     email = f'\"{request.form.get("email")}\"'
     hash_ = request.form.get('hash')
     UC = request.form.get('utilisateurcreateur')
+    hash_ = sha256(hash_.encode()).hexdigest()
+
 
     if UC == "utilisateur":
         passeVrai = database.select_hash_utilisateur(email)
@@ -97,7 +112,8 @@ def principal():
             boomer = sessions[cookie]
             print(boomer.getHash(), boomer.getUid(), boomer.getAvatar(), boomer.IS_CREATEUR)
 
-            return final_response  # render_template('principal.html')
+
+            return final_response #render_template('principal.html')
         else:
             return render_template('createurs.html')  # TODO faire la meme chose que utilisateur
 
@@ -107,7 +123,8 @@ def principal():
 @app.route("/login2", methods=['POST'])
 def login2():
     email = '"' + request.form.get('email') + '"'
-    hash_ = '"' + request.form.get('hash') + '"'
+    hash_ = request.form.get('hash')
+    hash_ = '"' + sha256(hash_.encode()).hexdigest() + '"'
     uid = request.form.get('Uid')
     age = request.form.get('age')
     username = f'\"{request.form.get("username")}\"'

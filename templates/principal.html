@@ -5,7 +5,13 @@
 <script type="text/javascript" src="../static/jscode.js"></script>
 </head>
 <body onload="SupprimerContenu()">
-<header>UTILISATEURS</header>
+<header>{{profile.nom}}
+<img src="{{profile.avatar}}" width="100" height="100">
+</header>
+
+{% for P in profile.paths %}
+        <img src={{P[0]}} width="200" height="200">
+{% endfor %}
 
 <img src="..\static\gifs\1.webp">
 <img src="..\static\gifs\2.webp">
