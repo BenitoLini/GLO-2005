@@ -51,8 +51,8 @@ class Boomer:
         return hashlib.sha256(f"{uid}{fill}".encode()).hexdigest()
 
     @staticmethod
-    def getUtilisateur(connection: pymysql.Connection, email, hash_):
+    def getUtilisateur(connection: pymysql.Connection, email):
         cursor = connection.cursor()
-        cursor.execute(f'SELECT uid FROM utilisateurs WHERE (email={email});')
+        cursor.execute(f'SELECT uid FROM utilisateurs WHERE email={email};')
         uid = cursor.fetchone()[0]
         return Boomer(connection, uid)

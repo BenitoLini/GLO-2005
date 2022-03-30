@@ -46,6 +46,7 @@ def select_24_gif_paths():
     random.shuffle(info)
     return info
 
+
 def select_all_gif_paths():
     request = 'SELECT path FROM Gifs'
     cursor.execute(request)
@@ -55,7 +56,7 @@ def select_all_gif_paths():
     return info
 
 
-if __name__ == "__main__":
-    print(select_24_gif_paths())
-    print(select_hash_utilisateur("gabrieljeanson@outlook.fr"))
-    print(select_hash_createur("w42342"))
+# if __name__ == "__main__":
+#     print(select_24_gif_paths())
+#     print(select_hash_utilisateur("gabrieljeanson@outlook.fr"))
+#     print(select_hash_createur("w42342"))

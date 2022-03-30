@@ -1,7 +1,7 @@
 CREATE DATABASE projetGlo2005;
 Use projetGlo2005;
 CREATE TABLE Utilisateurs(Uid integer, Avatar varchar(200), Hash varchar(100), Email varchar(100), Age integer, Username varchar(50), nom varchar(100), PRIMARY KEY(Uid), UNIQUE(Username), UNIQUE(Email));
-CREATE TABLE Createurs(Cid integer, Avatar varchar(200), Hash varchar(100), Email varchar(100), Age integer, Username varchar(50), nom varchar(100), PRIMARY KEY(Cid), UNIQUE(Username), UNIQUE(Email));
+# CREATE TABLE Createurs(Cid integer, Avatar varchar(200), Hash varchar(100), Email varchar(100), Age integer, Username varchar(50), nom varchar(100), PRIMARY KEY(Cid), UNIQUE(Username), UNIQUE(Email));
 CREATE TABLE Gifs(Gid integer, Nom varchar(100), story boolean, Date date, Path varchar(200), type varchar(50), NbLike integer, PRIMARY KEY(Gid));
 CREATE TABLE Cree(Creationid integer, Cid integer, Gid integer, PRIMARY KEY(Creationid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid), FOREIGN KEY(Cid) REFERENCES Createurs(Cid));
 CREATE TABLE Commentaire(Comid integer, texte varchar(500), Uid integer, Gid integer, PRIMARY KEY(Comid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(Uid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid));
@@ -51,7 +51,7 @@ DELIMITER ;
 DELIMITER //
 
 CREATE TRIGGER NombreLike
-    AFTER INSERT ON  Note
+    AFTER INSERT ON Note
     FOR EACH ROW
     BEGIN
         IF NEW.Dislike = False THEN

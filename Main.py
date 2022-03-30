@@ -1,150 +1,45 @@
 from flask import Flask, render_template, request
-from Boomer import Boomer
-import database
+from lib.boomer import Boomer
+from lib import database
 from hashlib import sha256
 
-app = Flask(__name__)
-GifPaths = {}
-Profile = {}
+app = Flask("BoomBird", template_folder="web", static_folder="web\\css")  # Création de l'application FLASK
+GifPaths = {}  # ?
+Profile = {}  # ?
 
-sessions = dict()
-
-
-def add_boomer(boomer):
-    cookie = boomer.getCookie()
-    sessions[cookie] = boomer
-    global Profile
-    Profile["avatar"] = boomer.getAvatar()
-    Profile["nom"] = boomer.getUsername()
-    info = database.select_all_gif_paths()
-    Profile["paths"] = info
-    final_response = app.make_response(render_template("principal.html", profile=Profile))
-    final_response.set_cookie("session-id", value=cookie, max_age=60 * 15)  # TODO changer max_age
-    return final_response, cookie
-
-
-def get_boomer_by_cookie(cookie):
-    boomer = None
-
-    for _, boomer_ in sessions.items():
-        if _ == cookie:
-            boomer = boomer_
-
-    return boomer
-
-
-def remove_boomer_by_cookie(cookie):
-    sessions.pop(cookie)
-
-
-def remove_boomer(boomer):
-    for _, _boomer in sessions.items():
-        if boomer == _boomer:
-            sessions.pop(_)
-
-
-def redirect_logged_user(not_log_redirect=None, not_log_profile=None):
-    if "session-id" in request.cookies.keys():
-        cookie = request.cookies["session-id"]
-
-        boomer = get_boomer_by_cookie(cookie)
-
-        if boomer is None:
-            return render_template('login.html', message="Session expirée!")
-
-        global Profile
-        Profile["avatar"] = boomer.getAvatar()
-        Profile["nom"] = boomer.getUsername()
-        info = database.select_all_gif_paths()
-        Profile["paths"] = info
-
-        return render_template("principal.html", profile=Profile)
-
-    if not_log_redirect is None:
-        return None
-    return render_template(not_log_redirect, profile=not_log_profile)
+sessions = dict()  # Dictionnaire qui stoque les sessions des utilisateurs
 
 
 @app.route("/")
-def main():
-    info = database.select_24_gif_paths()
-    global GifPaths
-    GifPaths["paths"] = info
-    GifPaths["long"] = len(info)
-
-    return redirect_logged_user('page1HTML.html', GifPaths)
+def page_principale():  # Rendu de la page principale (index.html)
+    return render_template("index.html")
 
 
-@app.route("/login")
-def login():
-    return redirect_logged_user("login.html")
+@app.route("/login.html", methods=["GET", "POST"])
+def login():  # Rendu de la page login (login.html)
+    if request.method == "POST":
+        email = f'\"{request.form.get("email")}\"'
+        hash_ = sha256(request.form.get('hash').encode()).hexdigest()
 
+        # TODO continuer la séquence de login
 
-@app.route("/signup")
-def signup():
-    return redirect_logged_user("signup.html")
-
-
-@app.route("/principal", methods=['POST'])
-def principal():
-    email = f'\"{request.form.get("email")}\"'
-    hash_ = request.form.get('hash')
-    UC = request.form.get('utilisateurcreateur')
-    hash_ = sha256(hash_.encode()).hexdigest()
-
-
-    if UC == "utilisateur":
-        passeVrai = database.select_hash_utilisateur(email)
+        return render_template("login.html")  # TODO Deux cas possibles 1) Bon login -> index.html 2) Mauvais login
+                                              # TODO -> login.html + erreur
     else:
-        passeVrai = database.select_hash_createur(email)
-
-    response = redirect_logged_user()
-
-    if response is not None:
-        return response
-
-    if (passeVrai is not None) and (hash_ == passeVrai[2]):
-        if UC == "utilisateur":
-            # Example de l'utilisation de la classe Boomer
-            final_response, cookie = add_boomer(Boomer.getUtilisateur(database.connection, email, hash_))
-
-            print(sessions)
-            boomer = sessions[cookie]
-            print(boomer.getHash(), boomer.getUid(), boomer.getAvatar(), boomer.IS_CREATEUR)
+        return render_template("login.html")
 
 
-            return final_response #render_template('principal.html')
-        else:
-            return render_template('createurs.html')  # TODO faire la meme chose que utilisateur
+@app.route("/signup.html", methods=["GET", "POST"])
+def signup():  # Rendu de la page signup (signup.html)  # TODO ajouter un bouton dans index.html -> signup.html
+    if request.method == "POST":
 
-    return render_template('login.html', message="Informations invalides!")
+        # TODO continuer la séquence de signup
 
-
-@app.route("/login2", methods=['POST'])
-def login2():
-    email = '"' + request.form.get('email') + '"'
-    hash_ = request.form.get('hash')
-    hash_ = '"' + sha256(hash_.encode()).hexdigest() + '"'
-    uid = request.form.get('Uid')
-    age = request.form.get('age')
-    username = f'\"{request.form.get("username")}\"'
-    avatar = f'\"{request.form.get("avatar")}\"'
-    nom = f'\"{request.form.get("nom")}\"'
-    UC = request.form.getlist('utilisateurcreateur')
-
-    if not UC:
-        return render_template('signup.html')
-
-    if UC == ['utilisateur']:
-        database.insert_utilisateur(uid, avatar, hash_, email, age, username, nom)
-    elif UC == ['createur']:
-        database.insert_createur(uid, avatar, hash_, email, age, username, nom)
-    elif UC == ['utilisateur', 'createur']:
-        database.insert_utilisateur(uid, avatar, hash_, email, age, username, nom)
-        database.insert_createur(uid, avatar, hash_, email, age, username, nom)
-
-    return render_template('login.html')
+        return render_template("signup.html")  # TODO Deux cas possibles 1) Bon signup -> index.html 2) Mauvais
+                                               # TODO signup -> signup.html + erreur
+    else:
+        return render_template("signup.html")
 
 
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    app.run()  # Lancement de l'application Flask
