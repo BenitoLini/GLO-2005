@@ -94,10 +94,11 @@ def get10Commentaires(id):
     request = f"""SELECT C.texte, U.username FROM Commentaire C, Gifs G, Utilisateurs U WHERE G.Gid={id} AND C.Gid = G.gid AND U.uid = C.uid;"""
     cursor.execute(request)
     commentaires = cursor.fetchall()
-    print(commentaires)
     return commentaires
 
-
+def insert_commentaire(texte, uid, gid):
+    request = f"""INSERT INTO commentaire (texte, uid, gid) VALUES({texte}, {uid}, {gid});"""
+    cursor.execute(request)
 
 if __name__ == "__main__":
     print(verifierHash("'gabrieljeanson@outlook.fr'", 'test123'))

@@ -88,3 +88,5 @@ INSERT INTO commentaire value(5, 'adsdfgsdfgdsfgsdgfdsgakfdjklhasfdasf', 2, 18);
 
 SELECT C.texte FROM Commentaire C, Gifs G WHERE G.Gid=18 AND C.Gid = G.gid;
 select * from utilisateurs;
+
+select * from gifs;

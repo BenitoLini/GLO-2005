@@ -57,21 +57,22 @@ def utilisateur():  # Rendu de la page signup (signup.html)  # TODO ajouter un b
 
     email = f'\"{request.form.get("email")}\"'
     hash_ = sha256(request.form.get('hash').encode()).hexdigest()
-    print(database.verifierHash(email, hash_))
 
     if database.verifierHash(email, hash_):
         global Profile
         info = database.select_7_gif_paths()
         Profile["paths"] = info
-        print(info)
         return render_template("utilisateur.html", profile=Profile)
 
     else:
         return render_template('login.html', message="Informations invalides!")
 
-@app.route("/gif.html")
+@app.route("/gif.html", methods=["GET", "POST"])
 def gif():  # Rendu de la page principale (index.html)
     Gid = request.args.get("Gid", default=None, type=str)
+    if request.method == "POST":
+         commentaire = '"' + request.form.get('commentaire') + '"'
+         database.insert_commentaire(commentaire, 1, Gid)
     global Gif
     path = database.getGifPath(Gid)
     nom = database.getGifNom(Gid)
@@ -79,10 +80,12 @@ def gif():  # Rendu de la page principale (index.html)
     nbdislike = database.getGifDislike(Gid)
     commentaires = database.get10Commentaires(Gid)
     Gif["path"] = path
+    Gif["Gid"] = Gid
     Gif["nom"] = nom
     Gif["like"] = nblike
     Gif["dislike"] = nbdislike
     Gif["commentaires"] = commentaires
+
     return render_template("gif.html", profile = Gif)
 
 

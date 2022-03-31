@@ -17,12 +17,12 @@
 </header>
 
 <p>Commentaires</p>
-<form action="utilisateur.html" method="post">
+<form action="gif.html?Gid={{profile.Gid}}" method="post">
 <p>Entrez votre commentaire:  <input type="text" name="commentaire"><br>
-
     <div class="centre">
        <input type="submit" value="commenter" name="soumettre">
     </div>
+<form/>
 {% for C in profile.commentaires %}
         <b><br>{{ C[1] }} : {{C[0]}}<br></b>
 {% endfor %}
