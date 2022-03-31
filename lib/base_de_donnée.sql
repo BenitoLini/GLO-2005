@@ -1,12 +1,12 @@
 use projetglo2005;
 
-DROP TABLE Favoris;
-DROP TABLE Note;
-DROP TABLE Reponse;
-DROP TABLE Commentaire;
-DROP TABLE Cree;
-DROP TABLE Gifs;
-DROP TABLE utilisateurs;
+DROP TABLE IF EXISTS Favoris;
+DROP TABLE IF EXISTS Note;
+DROP TABLE IF EXISTS Reponse;
+DROP TABLE IF EXISTS Commentaire;
+DROP TABLE IF EXISTS Cree;
+DROP TABLE IF EXISTS Gifs;
+DROP TABLE IF EXISTS utilisateurs;
 DROP TABLE IF EXISTS Createurs;
 
 CREATE TABLE Utilisateurs(Uid integer NOT NULL AUTO_INCREMENT, Avatar varchar(200), Hash varchar(100), Email varchar(100), Age integer, Username varchar(50), nom varchar(100), PRIMARY KEY(Uid), UNIQUE(Username), UNIQUE(Email));

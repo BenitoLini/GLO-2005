@@ -12,6 +12,14 @@ connection = pymysql.connect(
 cursor = connection.cursor()
 
 
+def getConnection():
+    global connection
+    return connection
+
+def getCursos():
+    global cursor
+    return cursor
+
 def insert_utilisateur(avatar, hash, email, age, username, nom):
     request = f"""INSERT INTO utilisateurs (avatar, hash, email, age, username, nom) VALUE({avatar}, {hash}, {email}, {age}, {username}, {nom});"""
     cursor.execute(request)

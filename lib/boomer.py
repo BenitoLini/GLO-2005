@@ -45,6 +45,9 @@ class Boomer:
         # 3) Ajouter dans bd le path /\ et commit
         pass
 
+    def getProfile(self):
+        pass
+
     @staticmethod
     def generate_cookie(uid):
         fill = "".join(random.choice(string.ascii_lowercase) for i in range(20))
