@@ -5,7 +5,7 @@ from hashlib import sha256
 from functools import wraps
 
 app = Flask("BoomBird", template_folder="web", static_folder="web\\css")  # Création de l'application FLASK
-GifPaths = {}  # ?
+Gif = {}  # ?
 
 sessions = dict()  # Dictionnaire qui stoque les sessions des utilisateurs
 
@@ -104,6 +104,27 @@ def utilisateur():  # Rendu de la page utilisateur (utilisateur.html)
     temp_profile["paths"] = info
     return render_template("utilisateur.html", profile=temp_profile)
 
+
+@app.route("/gif.html", methods=["GET", "POST"])
+def gif():  # Rendu de la page principale (index.html)
+    Gid = request.args.get("Gid", default=None, type=str)
+    if request.method == "POST":
+         commentaire = '"' + request.form.get('commentaire') + '"'
+         database.insert_commentaire(commentaire, 1, Gid)
+
+    path = database.getGifPath(Gid)
+    nom = database.getGifNom(Gid)
+    nblike = database.getGifLike(Gid)
+    nbdislike = database.getGifDislike(Gid)
+    commentaires = database.get10Commentaires(Gid)
+    Gif["path"] = path
+    Gif["Gid"] = Gid
+    Gif["nom"] = nom
+    Gif["like"] = nblike
+    Gif["dislike"] = nbdislike
+    Gif["commentaires"] = commentaires
+
+    return render_template("gif.html", profile = Gif)
 
 if __name__ == "__main__":
     app.run()  # Lancement de l'application Flask
