@@ -16,9 +16,11 @@ def getConnection():
     global connection
     return connection
 
+
 def getCursos():
     global cursor
     return cursor
+
 
 def insert_utilisateur(avatar, hash, email, age, username, nom):
     request = f"""INSERT INTO utilisateurs (avatar, hash, email, age, username, nom) VALUE({avatar}, {hash}, {email}, {age}, {username}, {nom});"""
@@ -43,6 +45,7 @@ def select_24_gif_paths():
 
     return info
 
+
 def select_7_gif_paths():
     request = 'SELECT path, Gid FROM Gifs'
     cursor.execute(request)
@@ -63,16 +66,17 @@ def select_all_gif_paths():
     random.shuffle(info)
     return info
 
+
 def verifierHash(email, hash):
     vraiHash = select_hash_utilisateur(email)
     if vraiHash is None:
         return False
 
     if hash == vraiHash[2]:
-
         return True
     else:
         return False
+
 
 def getGifNom(id):
     request = f"""SELECT nom FROM gifs WHERE Gid={id};"""
@@ -80,11 +84,13 @@ def getGifNom(id):
     nom = cursor.fetchone()
     return nom
 
+
 def getGifPath(id):
     request = f"""SELECT path FROM gifs WHERE Gid={id};"""
     cursor.execute(request)
     path = cursor.fetchone()
     return path
+
 
 def getGifLike(id):
     request = f"""SELECT COUNT(*) FROM Note N, Gifs G WHERE G.Gid={id} AND N.Gid = G.gid AND N.dislike = false;"""
@@ -92,11 +98,13 @@ def getGifLike(id):
     nblike = cursor.fetchone()
     return nblike
 
+
 def getGifDislike(id):
     request = f"""SELECT COUNT(*) FROM Note N, Gifs G WHERE G.Gid={id} AND N.Gid = G.gid AND N.dislike = true;"""
     cursor.execute(request)
     nbdislike = cursor.fetchone()
     return nbdislike
+
 
 def get10Commentaires(id):
     request = f"""SELECT C.texte, U.username FROM Commentaire C, Gifs G, Utilisateurs U WHERE G.Gid={id} AND C.Gid = G.gid AND U.uid = C.uid;"""
@@ -104,13 +112,16 @@ def get10Commentaires(id):
     commentaires = cursor.fetchall()
     return commentaires
 
+
 def insert_commentaire(texte, uid, gid):
     request = f"""INSERT INTO commentaire (texte, uid, gid) VALUES({texte}, {uid}, {gid});"""
     cursor.execute(request)
 
+
+def like(gid, uid, dislike):
+    request = f"""INSERT INTO note (Dislike, Uid, Gid) VALUES ({dislike}, {uid}, {gid})"""
+    cursor.execute(request)
+
+
 if __name__ == "__main__":
     print(verifierHash("'gabrieljeanson@outlook.fr'", 'test123'))
-
-
-
-

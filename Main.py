@@ -111,6 +111,7 @@ def utilisateur():  # Rendu de la page utilisateur (utilisateur.html)
 @redirect_if_not_logged
 def gif():  # Rendu de la page principale (index.html)
     Gid = request.args.get("Gid", default=None, type=str)
+
     if request.method == "POST":
         commentaire = '"' + request.form.get('commentaire') + '"'
         database.insert_commentaire(commentaire, getBoomer(request.cookies.get("cid")).getUid(), Gid)
@@ -124,6 +125,14 @@ def gif():  # Rendu de la page principale (index.html)
 
     return render_template("gif.html", profile=Gif)
 
+
+@app.route("/upload.html", methods=["GET", "POST"])
+@redirect_if_not_logged
+def upload():
+    if request.method == "POST":
+
+        return render_template("upload.html")
+    return render_template("upload.html")
 
 if __name__ == "__main__":
     app.run()  # Lancement de l'application Flask
