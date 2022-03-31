@@ -25,7 +25,7 @@ def select_hash_utilisateur(email):
 
 
 def select_24_gif_paths():
-    request = 'SELECT path FROM Gifs'
+    request = 'SELECT path, Gid FROM Gifs'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -36,7 +36,7 @@ def select_24_gif_paths():
     return info
 
 def select_7_gif_paths():
-    request = 'SELECT path FROM Gifs'
+    request = 'SELECT path, Gid FROM Gifs'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -48,7 +48,7 @@ def select_7_gif_paths():
 
 
 def select_all_gif_paths():
-    request = 'SELECT path FROM Gifs'
+    request = 'SELECT path, Gid FROM Gifs'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -66,6 +66,36 @@ def verifierHash(email, hash):
     else:
         return False
 
+def getGifNom(id):
+    request = f"""SELECT nom FROM gifs WHERE Gid={id};"""
+    cursor.execute(request)
+    nom = cursor.fetchone()
+    return nom
+
+def getGifPath(id):
+    request = f"""SELECT path FROM gifs WHERE Gid={id};"""
+    cursor.execute(request)
+    path = cursor.fetchone()
+    return path
+
+def getGifLike(id):
+    request = f"""SELECT COUNT(*) FROM Note N, Gifs G WHERE G.Gid={id} AND N.Gid = G.gid AND N.dislike = false;"""
+    cursor.execute(request)
+    nblike = cursor.fetchone()
+    return nblike
+
+def getGifDislike(id):
+    request = f"""SELECT COUNT(*) FROM Note N, Gifs G WHERE G.Gid={id} AND N.Gid = G.gid AND N.dislike = true;"""
+    cursor.execute(request)
+    nbdislike = cursor.fetchone()
+    return nbdislike
+
+def get10Commentaires(id):
+    request = f"""SELECT C.texte, U.username FROM Commentaire C, Gifs G, Utilisateurs U WHERE G.Gid={id} AND C.Gid = G.gid AND U.uid = C.uid;"""
+    cursor.execute(request)
+    commentaires = cursor.fetchall()
+    print(commentaires)
+    return commentaires
 
 
 

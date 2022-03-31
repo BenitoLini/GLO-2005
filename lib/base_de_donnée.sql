@@ -78,3 +78,13 @@ insert into gifs value(22, "oiseau22", FALSE, '2022-03-16', "https://media.giphy
 insert into gifs value(23, "oiseau23", FALSE, '2022-03-16', "https://media.giphy.com/media/W5YVAfSttCqre/giphy.gif", 'Gifs', 0);
 insert into gifs value(24, "oiseau24", FALSE, '2022-03-16', "https://media.giphy.com/media/TQoap3ycHL25a/giphy.gif", 'Gifs', 0);
 insert into gifs value(25, "oiseau25", FALSE, '2022-03-16', "https://media.giphy.com/media/PsLIN8YlKy4rS/giphy.gif", 'Gifs', 0);
+
+INSERT INTO commentaire value(1, 'allo', 1, 18);
+INSERT INTO commentaire value(2, 'bel oiseau', 1, 18);
+INSERT INTO commentaire value(3, 'djshfalshdf', 1, 18);
+INSERT INTO commentaire value(4, 'adsakfdjklhasfdasf', 1, 18);
+INSERT INTO commentaire value(5, 'adsdfgsdfgdsfgsdgfdsgakfdjklhasfdasf', 2, 18);
+
+
+SELECT C.texte FROM Commentaire C, Gifs G WHERE G.Gid=18 AND C.Gid = G.gid;
+select * from utilisateurs;

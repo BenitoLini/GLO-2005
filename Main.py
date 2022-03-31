@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from lib.boomer import Boomer
 from lib import database
 from hashlib import sha256
 
 app = Flask("BoomBird", template_folder="web", static_folder="web\\css")  # Création de l'application FLASK
-GifPaths = {}  # ?
+Gif = {}  # ?
 Profile = {}  # ?
 
 sessions = dict()  # Dictionnaire qui stoque les sessions des utilisateurs
@@ -69,7 +69,21 @@ def utilisateur():  # Rendu de la page signup (signup.html)  # TODO ajouter un b
     else:
         return render_template('login.html', message="Informations invalides!")
 
-
+@app.route("/gif.html")
+def gif():  # Rendu de la page principale (index.html)
+    Gid = request.args.get("Gid", default=None, type=str)
+    global Gif
+    path = database.getGifPath(Gid)
+    nom = database.getGifNom(Gid)
+    nblike = database.getGifLike(Gid)
+    nbdislike = database.getGifDislike(Gid)
+    commentaires = database.get10Commentaires(Gid)
+    Gif["path"] = path
+    Gif["nom"] = nom
+    Gif["like"] = nblike
+    Gif["dislike"] = nbdislike
+    Gif["commentaires"] = commentaires
+    return render_template("gif.html", profile = Gif)
 
 
 

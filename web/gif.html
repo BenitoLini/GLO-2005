@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="css/csspages.css">
+</head>
+<body>
+<p>{{profile.nom[0]}}</p>
+<img src={{profile.path[0]}} class="center2">
+
+<header><h5>{{profile.like[0]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ profile.dislike[0]}}</h5></header>
+
+<header>
+    <button>Like</button>
+<button>Dislike</button>
+</header>
+
+<p>Commentaires</p>
+<form action="utilisateur.html" method="post">
+<p>Entrez votre commentaire:  <input type="text" name="commentaire"><br>
+
+    <div class="centre">
+       <input type="submit" value="commenter" name="soumettre">
+    </div>
+{% for C in profile.commentaires %}
+        <b><br>{{ C[1] }} : {{C[0]}}<br></b>
+{% endfor %}
+
+</body>
+</html>

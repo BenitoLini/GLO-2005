@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>BOOMBIRD</title>
     <link rel="stylesheet" href="css/styles.css">
-    <script src="../static/App.js"></script>
+    <script type="text/javascript" src="../web/js/jscode.js"></script>
 </head>
 
 
@@ -56,7 +56,7 @@
     Trending
 </h3>
 {% for P in profile.paths %}
-        <img src={{P[0]}} width="200" height="200">
+        <a href="gif.html?Gid={{P[1]}}" ><img src={{P[0]}} width="200" height="200" id="image"></a>
 {% endfor %}
 Les gifs les plus cliqués du mois
 <h3>
