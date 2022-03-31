@@ -17,6 +17,7 @@ def redirect_if_logged(f):
             return redirect(url_for("utilisateur"))
         else:
             return f()
+
     return decorator
 
 
@@ -27,6 +28,7 @@ def redirect_if_not_logged(f):
             return f()
         else:
             return redirect(url_for("login"))
+
     return decorator
 
 
@@ -50,7 +52,7 @@ def removeBoomer(cookie):
     return response
 
 
-def getBoomer(cookie):
+def getBoomer(cookie) -> Boomer:
     return sessions[cookie]
 
 
@@ -106,25 +108,22 @@ def utilisateur():  # Rendu de la page utilisateur (utilisateur.html)
 
 
 @app.route("/gif.html", methods=["GET", "POST"])
+@redirect_if_not_logged
 def gif():  # Rendu de la page principale (index.html)
     Gid = request.args.get("Gid", default=None, type=str)
     if request.method == "POST":
-         commentaire = '"' + request.form.get('commentaire') + '"'
-         database.insert_commentaire(commentaire, 1, Gid)
+        commentaire = '"' + request.form.get('commentaire') + '"'
+        database.insert_commentaire(commentaire, getBoomer(request.cookies.get("cid")).getUid(), Gid)
 
-    path = database.getGifPath(Gid)
-    nom = database.getGifNom(Gid)
-    nblike = database.getGifLike(Gid)
-    nbdislike = database.getGifDislike(Gid)
-    commentaires = database.get10Commentaires(Gid)
-    Gif["path"] = path
+    Gif["path"] = database.getGifPath(Gid)
     Gif["Gid"] = Gid
-    Gif["nom"] = nom
-    Gif["like"] = nblike
-    Gif["dislike"] = nbdislike
-    Gif["commentaires"] = commentaires
+    Gif["nom"] = database.getGifNom(Gid)
+    Gif["like"] = database.getGifLike(Gid)
+    Gif["dislike"] = database.getGifDislike(Gid)
+    Gif["commentaires"] = database.get10Commentaires(Gid)
 
-    return render_template("gif.html", profile = Gif)
+    return render_template("gif.html", profile=Gif)
+
 
 if __name__ == "__main__":
     app.run()  # Lancement de l'application Flask
