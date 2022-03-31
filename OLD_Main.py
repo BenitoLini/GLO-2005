@@ -135,7 +135,7 @@ def login2():
         return render_template('signup.html')
 
     if UC == ['utilisateur']:
-        database.insert_utilisateur(uid, avatar, hash_, email, age, username, nom)
+        database.insert_utilisateur(avatar, hash_, email, age, username, nom)
     elif UC == ['createur']:
         database.insert_createur(uid, avatar, hash_, email, age, username, nom)
     elif UC == ['utilisateur', 'createur']:

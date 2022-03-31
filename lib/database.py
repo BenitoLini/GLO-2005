@@ -12,13 +12,8 @@ connection = pymysql.connect(
 cursor = connection.cursor()
 
 
-def insert_utilisateur(Uid, avatar, hash, email, age, username, nom):
-    request = f"""INSERT INTO utilisateurs VALUE({Uid}, {avatar}, {hash}, {email}, {age}, {username}, {nom});"""
-    cursor.execute(request)
-
-
-def insert_createur(Uid, avatar, hash, email, age, username, nom):
-    request = f"""INSERT INTO createurs VALUE({Uid}, {avatar}, {hash}, {email}, {age}, {username}, {nom});"""
+def insert_utilisateur(avatar, hash, email, age, username, nom):
+    request = f"""INSERT INTO utilisateurs (avatar, hash, email, age, username, nom) VALUE({avatar}, {hash}, {email}, {age}, {username}, {nom});"""
     cursor.execute(request)
 
 
@@ -29,21 +24,26 @@ def select_hash_utilisateur(email):
     return user
 
 
-def select_hash_createur(email):
-    request = f"""SELECT * FROM createurs WHERE email={email};"""
-    cursor.execute(request)
-    user = cursor.fetchone()
-    return user
-
-
 def select_24_gif_paths():
     request = 'SELECT path FROM Gifs'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
+    random.shuffle(info)
     if len(info) > 24:
         info = info[0:24]
+
+    return info
+
+def select_7_gif_paths():
+    request = 'SELECT path FROM Gifs'
+    cursor.execute(request)
+    info = cursor.fetchall()
+    info = list(info)
     random.shuffle(info)
+    if len(info) > 7:
+        info = info[0:7]
+
     return info
 
 
@@ -55,8 +55,23 @@ def select_all_gif_paths():
     random.shuffle(info)
     return info
 
+def verifierHash(email, hash):
+    vraiHash = select_hash_utilisateur(email)
+    if vraiHash is None:
+        return False
 
-# if __name__ == "__main__":
-#     print(select_24_gif_paths())
-#     print(select_hash_utilisateur("gabrieljeanson@outlook.fr"))
-#     print(select_hash_createur("w42342"))
+    if hash == vraiHash[2]:
+
+        return True
+    else:
+        return False
+
+
+
+
+if __name__ == "__main__":
+    print(verifierHash("'gabrieljeanson@outlook.fr'", 'test123'))
+
+
+
+

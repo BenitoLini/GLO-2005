@@ -1,13 +1,21 @@
-CREATE DATABASE projetGlo2005;
-Use projetGlo2005;
-CREATE TABLE Utilisateurs(Uid integer, Avatar varchar(200), Hash varchar(100), Email varchar(100), Age integer, Username varchar(50), nom varchar(100), PRIMARY KEY(Uid), UNIQUE(Username), UNIQUE(Email));
-# CREATE TABLE Createurs(Cid integer, Avatar varchar(200), Hash varchar(100), Email varchar(100), Age integer, Username varchar(50), nom varchar(100), PRIMARY KEY(Cid), UNIQUE(Username), UNIQUE(Email));
-CREATE TABLE Gifs(Gid integer, Nom varchar(100), story boolean, Date date, Path varchar(200), type varchar(50), NbLike integer, PRIMARY KEY(Gid));
-CREATE TABLE Cree(Creationid integer, Cid integer, Gid integer, PRIMARY KEY(Creationid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid), FOREIGN KEY(Cid) REFERENCES Createurs(Cid));
-CREATE TABLE Commentaire(Comid integer, texte varchar(500), Uid integer, Gid integer, PRIMARY KEY(Comid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(Uid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid));
-CREATE TABLE Reponse(Repid integer, Comid integer, texte varchar(500), Uid integer, PRIMARY KEY(Repid), FOREIGN KEY(Comid) REFERENCES Commentaire(Comid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(Uid));
-CREATE TABLE Note(Noteid integer, Dislike boolean, Uid integer, Gid integer, PRIMARY KEY(Noteid), UNIQUE(Uid, Gid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(Uid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid));
-CREATE TABLE Favoris(Favid integer, Uid integer, Gid integer, PRIMARY KEY(Favid), UNIQUE(Uid, Gid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(Uid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid));
+use projetglo2005;
+
+DROP TABLE Favoris;
+DROP TABLE Note;
+DROP TABLE Reponse;
+DROP TABLE Commentaire;
+DROP TABLE Cree;
+DROP TABLE Gifs;
+DROP TABLE utilisateurs;
+DROP TABLE IF EXISTS Createurs;
+
+CREATE TABLE Utilisateurs(Uid integer NOT NULL AUTO_INCREMENT, Avatar varchar(200), Hash varchar(100), Email varchar(100), Age integer, Username varchar(50), nom varchar(100), PRIMARY KEY(Uid), UNIQUE(Username), UNIQUE(Email));
+CREATE TABLE Gifs(Gid integer not null AUTO_INCREMENT, Nom varchar(100), story boolean, Date date, Path varchar(200), type varchar(50), NbLike integer DEFAULT 0, PRIMARY KEY(Gid));
+CREATE TABLE Cree(Creationid integer NOT NULL AUTO_INCREMENT, Uid integer, Gid integer, PRIMARY KEY(Creationid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(uid));
+CREATE TABLE Commentaire(Comid integer NOT NULL AUTO_INCREMENT, texte varchar(500), Uid integer, Gid integer, PRIMARY KEY(Comid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(Uid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid));
+CREATE TABLE Reponse(Repid integer NOT NULL AUTO_INCREMENT, Comid integer, texte varchar(500), Uid integer, PRIMARY KEY(Repid), FOREIGN KEY(Comid) REFERENCES Commentaire(Comid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(Uid));
+CREATE TABLE Note(Noteid integer NOT NULL AUTO_INCREMENT, Dislike boolean, Uid integer, Gid integer, PRIMARY KEY(Noteid), UNIQUE(Uid, Gid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(Uid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid));
+CREATE TABLE Favoris(Favid integer NOT NULL AUTO_INCREMENT, Uid integer, Gid integer, PRIMARY KEY(Favid), UNIQUE(Uid, Gid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(Uid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid));
 
 
 
@@ -24,20 +32,6 @@ CREATE TRIGGER AgeUtilisateur
 
 DELIMITER ;
 
-DELIMITER //
-
-CREATE TRIGGER AgeCreateurs
-    BEFORE INSERT ON Createurs
-    FOR EACH ROW
-    BEGIN
-        IF NEW.Age < 18 THEN
-            SIGNAL SQLSTATE '45000';
-        end if ;
-    end //
-
-DELIMITER ;
-
-
 
 DELIMITER //
 
@@ -51,7 +45,7 @@ DELIMITER ;
 DELIMITER //
 
 CREATE TRIGGER NombreLike
-    AFTER INSERT ON Note
+    AFTER INSERT ON  Note
     FOR EACH ROW
     BEGIN
         IF NEW.Dislike = False THEN
@@ -60,6 +54,7 @@ CREATE TRIGGER NombreLike
     end //
 
 DELIMITER ;
+
 
 insert into gifs value(4, "oiseau4", FALSE, '2022-03-16', "https://media.giphy.com/media/hSjOP9Isvq8oWYQiVS/giphy.gif", 'Gifs', 0);
 insert into gifs value(5, "oiseau5", FALSE, '2022-03-16', "https://media.giphy.com/media/B81XkL3dtnWTe/giphy.gif", 'Gifs', 0);

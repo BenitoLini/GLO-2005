@@ -45,3 +45,27 @@ img {
 .mes {
     color: white;
 }
+
+
+.menu{
+display:flex;
+padding:0;
+justify-content :space-around;}
+
+.menu li {
+    list-style-type: none;
+    color: white;
+}
+
+.menu a {
+    display:block;
+    margin:1.5rem;
+}
+
+/*https://juliencrego.com/astuces/creer-un-menu-horizontal-simplissime-en-css/*/
+
+.Search{
+    display: flex;
+    padding: 20px;
+    justify-content: space-around;
+}

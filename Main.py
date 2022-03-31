@@ -20,11 +20,16 @@ def login():  # Rendu de la page login (login.html)
     if request.method == "POST":
         email = f'\"{request.form.get("email")}\"'
         hash_ = sha256(request.form.get('hash').encode()).hexdigest()
-
+        print(database.verifierHash(email, hash_))
         # TODO continuer la séquence de login
 
-        return render_template("login.html")  # TODO Deux cas possibles 1) Bon login -> index.html 2) Mauvais login
+        if database.verifierHash(email, hash_):
+
+            return render_template("utilisateur.html")
+            # TODO Deux cas possibles 1) Bon login -> index.html 2) Mauvais login
                                               # TODO -> login.html + erreur
+        else:
+            return render_template('login.html', message="Informations invalides!")
     else:
         return render_template("login.html")
 
@@ -33,12 +38,40 @@ def login():  # Rendu de la page login (login.html)
 def signup():  # Rendu de la page signup (signup.html)  # TODO ajouter un bouton dans index.html -> signup.html
     if request.method == "POST":
 
-        # TODO continuer la séquence de signup
+        email = '"' + request.form.get('email') + '"'
+        hash_ = request.form.get('hash')
+        hash_ = '"' + sha256(hash_.encode()).hexdigest() + '"'
+        age = request.form.get('age')
+        username = f'\"{request.form.get("username")}\"'
+        avatar = f'\"{request.form.get("avatar")}\"'
+        nom = f'\"{request.form.get("nom")}\"'
+        database.insert_utilisateur(avatar, hash_, email, age, username, nom)
 
-        return render_template("signup.html")  # TODO Deux cas possibles 1) Bon signup -> index.html 2) Mauvais
-                                               # TODO signup -> signup.html + erreur
+        # TODO continuer la séquence de signup
+        return render_template('login.html')
     else:
         return render_template("signup.html")
+
+@app.route("/utilisateur.html", methods=["GET", "POST"])
+def utilisateur():  # Rendu de la page signup (signup.html)  # TODO ajouter un bouton dans index.html -> signup.html
+
+    email = f'\"{request.form.get("email")}\"'
+    hash_ = sha256(request.form.get('hash').encode()).hexdigest()
+    print(database.verifierHash(email, hash_))
+
+    if database.verifierHash(email, hash_):
+        global Profile
+        info = database.select_7_gif_paths()
+        Profile["paths"] = info
+        print(info)
+        return render_template("utilisateur.html", profile=Profile)
+
+    else:
+        return render_template('login.html', message="Informations invalides!")
+
+
+
+
 
 
 if __name__ == "__main__":
