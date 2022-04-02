@@ -5,27 +5,40 @@
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="css/csspages.css">
 </head>
-<body>
-<p>{{profile.nom[0]}}</p>
+<div style="text-align: left">
+    <a href="utilisateur.html" title="Back">Back</a>
+</div>
+<p>{{profile.nom}}</p>
 <img src={{profile.path[0]}} class="center2">
+
+<div style="text-align: center">
+    <a href="gif.html?Gid={{profile.Gid}}&fav=1" ><button>Ajouter aux favoris</button></a>
+</div>
+
 
 <header><h5>{{profile.like[0]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ profile.dislike[0]}}</h5></header>
 
 <header>
-    <button>Like</button>
-<button>Dislike</button>
+    <a href="gif.html?Gid={{profile.Gid}}&like=1" ><button>Like</button></a>
+    <a href="gif.html?Gid={{profile.Gid}}&dislike=1" ><button>Dislike</button></a>
 </header>
-
 <p>Commentaires</p>
-<form action="gif.html?Gid={{profile.Gid}}" method="post">
-<p>Entrez votre commentaire:  <input type="text" name="commentaire"><br>
+<form action="gif.html?Gid={{profile.Gid}}&commentaire=1" method="POST">
+    <p>Entrez votre commentaire:  <input type="text" name="commentaire"><br>
     <div class="centre">
-       <input type="submit" value="commenter" name="soumettre">
+        <input type="submit" value="commenter" name="soumettre">
     </div>
-<form/>
-{% for C in profile.commentaires %}
-        <b><br>{{ C[1] }} : {{C[0]}}<br></b>
-{% endfor %}
+    <form></form>
+    {% for C in profile.commentaires %}
+        <b><br>{{ C[1] }} : {{C[0]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="gif.html?Gid={{profile.Gid}}&comid={{C[2]}}" ><button>Repondre</button></a><br></b>
+        {% for R in C[3] %}
+        <b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ R[1] }} : {{R[0]}} <br></b>
 
-</body>
+    {% endfor %}
+
+
+
+
+    {% endfor %}
+
 </html>

@@ -1,11 +1,38 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Createur</title>
-<link rel="stylesheet" type="text/css" href="../web/css/csspages.css">
-<script type="text/javascript" src="../web/js/jscode.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="css/csspages.css">
 </head>
-<body onload="SupprimerContenu()">
-<header>Bonjour {{profile.nom}}</header>
+<p>{{profile.nom}}</p>
+<img src={{profile.path[0]}} class="center2">
 
-</body>
+<div style="text-align: center">
+    <a href="giffav.html?Gid={{profile.Gid}}" ><button>Ajouter aux favoris</button></a>
+</div>
+
+
+<header><h5>{{profile.like[0]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ profile.dislike[0]}}</h5></header>
+
+<header>
+    <a href="giflike.html?Gid={{profile.Gid}}" ><button>Like</button></a>
+    <a href="gifdislike.html?Gid={{profile.Gid}}" ><button>Dislike</button></a>
+</header>
+<p>Commentaires</p>
+<form action="gifcom.html?Gid={{profile.Gid}}" method="POST">
+    <p>Entrez votre commentaire:  <input type="text" name="commentaire"><br>
+    <div class="centre">
+        <input type="submit" value="commenter" name="soumettre">
+    </div>
+    <form></form>
+    {% for C in profile.commentaires %}
+        <b><br>{{ C[1] }} : {{C[0]}} <br></b>
+        {% for R in profile.reponses[i] %}
+        <b><br>{{ R[1] }} : {{R[0]}} <br></b>
+
+        {% endfor %}
+        <a href="gifresponse.html?comid={{C[2]}}" ><button>Repondre</button></a>
+    {% endfor %}
+
 </html>

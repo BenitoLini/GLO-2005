@@ -90,3 +90,10 @@ SELECT C.texte FROM Commentaire C, Gifs G WHERE G.Gid=18 AND C.Gid = G.gid;
 select * from utilisateurs;
 
 select * from gifs;
+
+INSERT INTO cree (uid, gid) VALUES (1, 5), (2, 6), (1, 7), (1, 8);
+select * from cree;
+
+select * from favoris;
+select * from commentaire;
+select * from reponse;

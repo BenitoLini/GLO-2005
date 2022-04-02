@@ -102,28 +102,87 @@ def signup():  # Rendu de la page signup (signup.html)  # TODO ajouter un bouton
 @redirect_if_not_logged
 def utilisateur():  # Rendu de la page utilisateur (utilisateur.html)
     temp_profile = dict()
+    cookie = ""
+    for key in sessions:
+        cookie = key
+    boomer = getBoomer(cookie)
+    avatar = boomer.getAvatar()
+    uid = boomer.getUid()
+
+
     info = database.select_7_gif_paths()
     temp_profile["paths"] = info
+    temp_profile["avatar"] = avatar
+    temp_profile["uid"] = uid
     return render_template("utilisateur.html", profile=temp_profile)
 
 
 @app.route("/gif.html", methods=["GET", "POST"])
 @redirect_if_not_logged
 def gif():  # Rendu de la page principale (index.html)
-    Gid = request.args.get("Gid", default=None, type=str)
+    gid = request.args.get("Gid", default=None, type=int)
+    fav = request.args.get("fav", default=None, type=int)
+    like = request.args.get("like", default=None, type=int)
+    dislike = request.args.get("dislike", default=None, type=int)
+    commentaire = request.args.get("commentaire", default=None, type=int)
+    comid = request.args.get("comid", default=None, type=int)
 
-    if request.method == "POST":
+    cookie = ""
+    for key in sessions:
+        cookie = key
+    boomer = getBoomer(cookie)
+    uid = boomer.getUid()
+    if fav == 1:
+        if not database.isFavoris(uid, gid):
+            database.ajouterFavoris(uid, gid)
+        else:
+            database.retirerFavoris(uid, gid)
+
+    if like == 1:
+        database.ajouterLike(uid, gid)
+
+    if dislike == 1:
+        database.ajouterDislike(uid, gid)
+
+    if commentaire == 1:
         commentaire = '"' + request.form.get('commentaire') + '"'
-        database.insert_commentaire(commentaire, getBoomer(request.cookies.get("cid")).getUid(), Gid)
+        if commentaire != '""':
+            database.insert_commentaire(commentaire, getBoomer(request.cookies.get("cid")).getUid(), gid)
 
-    Gif["path"] = database.getGifPath(Gid)
-    Gif["Gid"] = Gid
-    Gif["nom"] = database.getGifNom(Gid)
-    Gif["like"] = database.getGifLike(Gid)
-    Gif["dislike"] = database.getGifDislike(Gid)
-    Gif["commentaires"] = database.get10Commentaires(Gid)
+
+
+    Gif["path"] = database.getGifPath(gid)
+    Gif["Gid"] = gid
+    Gif["comid"] = comid
+    if database.isFavoris(uid, gid):
+        Gif["nom"] = database.getGifNom(gid)[0] + "**"
+    else:
+        Gif["nom"] = database.getGifNom(gid)[0]
+
+    Gif["like"] = database.getGifLike(gid)
+    Gif["dislike"] = database.getGifDislike(gid)
+
+    liste = []
+    for i in database.getCommentaires(gid):
+        liste += (database.getReponses(i[2]))
+
+    if comid != None:
+        if request.method == "POST":
+            reponse = '"' + request.form.get('reponse') + '"'
+            if reponse != '""':
+                database.insert_response(reponse, uid, comid)
+        else:
+            return render_template("response.html", profile=Gif)
+
+    commentaires = database.getCommentaires(gid)
+    commentairesreponses = []
+    for i in commentaires:
+        commentairesreponses.append(i + (database.getReponses(i[2]),))
+    Gif["commentaires"] = commentairesreponses
 
     return render_template("gif.html", profile=Gif)
+
+
 
 
 @app.route("/upload.html", methods=["GET", "POST"])
@@ -133,6 +192,64 @@ def upload():
 
         return render_template("upload.html")
     return render_template("upload.html")
+
+@app.route("/profileUser.html", methods=["GET", "POST"])
+@redirect_if_not_logged
+def profileUser():
+    uid = request.args.get("uid", default=None, type=str)
+    temp_profile = dict()
+    cookie = ""
+    for key in sessions:
+        cookie = key
+    boomer = getBoomer(cookie)
+    temp_profile["avatar"] = boomer.getAvatar()
+    temp_profile["uid"] = uid
+    temp_profile["pathsgifsuser"] = database.getUserGifs(uid)
+    temp_profile["pathsgifsfavoris"] = database.getFavorisGifs(uid)
+    temp_profile["username"] = boomer.getUsername()
+
+    if request.method == "POST":
+
+        return render_template("profileUser.html", profile = temp_profile)
+    return render_template("profileUser.html", profile = temp_profile)
+
+
+@app.route("/gifresponse.html", methods=["GET", "POST"])
+@redirect_if_not_logged
+def gifresponse():
+    comid = request.args.get("comid", default=None, type=int)
+    cookie = ""
+    for key in sessions:
+        cookie = key
+    boomer = getBoomer(cookie)
+    uid = boomer.getUid()
+    Gid = database.getGidByCommentaire(comid)
+
+    listeReponses = []
+    for i in range(len(database.get10Commentaires(Gid))):
+        listeReponses.append(database.getReponses(database.get10Commentaires(Gid)[i][2]))
+
+
+    temp_profile = {}
+    temp_profile["reponses"] = listeReponses
+    temp_profile["comid"] = comid
+    temp_profile["commentaire"] = database.getTextByComid(comid)
+    temp_profile["path"] = database.getGifPath(Gid)
+    if database.isFavoris(uid, Gid):
+        temp_profile["nom"] = database.getGifNom(Gid)[0] + "**"
+    else:
+        Gif["nom"] = database.getGifNom(Gid)[0]
+    temp_profile["Gid"] = Gid
+    temp_profile["path"] = database.getGifPath(Gid)
+    temp_profile["like"] = database.getGifLike(Gid)
+    temp_profile["dislike"] = database.getGifDislike(Gid)
+    temp_profile["commentaires"] = database.get10Commentaires(Gid)
+    if request.method == "POST":
+        reponse = '"' + request.form.get('reponse') + '"'
+        if reponse != '""':
+            database.insert_response(reponse, uid, comid)
+        return render_template("gif.html", profile=temp_profile)
+    return render_template("response.html", profile=temp_profile)
 
 if __name__ == "__main__":
     app.run()  # Lancement de l'application Flask

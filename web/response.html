@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="css/csspages.css">
+</head>
+<body>
+<div style="text-align: left">
+    <a href="gif.html?Gid={{profile.Gid}}" title="Back">Back</a>
+</div>
+<p>{{profile.nom}}</p>
+<img src={{profile.path[0]}} class="center2">
+
+<p>Commentaire : </p>
+<p>{{profile.commentaire}}</p>
+
+<p>{{ profile.Gid }}</p>
+<form action="gif.html?Gid={{ profile.Gid }}&comid={{profile.comid}}" method="post">
+    <p>Entrez votre réponse:  <input type="text" name="reponse"><br>
+    <div class="centre">
+        <input type="submit" value="Repondre" name="soumettre">
+    </div>
+    <form></form>
+
+</body>
+</html>

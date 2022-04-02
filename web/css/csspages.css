@@ -8,6 +8,11 @@ body {
     color: white;
 }
 
+h1 {
+    text-align: center;
+    color: white;
+}
+
 .center2 {
     display: block;
   margin-left: auto;
@@ -36,12 +41,14 @@ b {
 }
 
 button {
-    font-size: 20px;
-    padding: 10px 24px;
+    font-size: 16px;
+    padding: 10px;
     margin-left: 20px;
     margin-right: 20px;
     text-align: center;
+    position: relative;
 }
+
 
 input {
     	font-family: "Times New Roman";
