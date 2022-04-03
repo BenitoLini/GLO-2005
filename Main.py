@@ -3,8 +3,11 @@ from lib.boomer import Boomer
 from lib import database
 from hashlib import sha256
 from functools import wraps
+from uuid import uuid4
 
 app = Flask("BoomBird", template_folder="web", static_folder="web\\css")  # Création de l'application FLASK
+app.config["UPLOAD_FOLDER"] = "web\\css\\upload"
+app.config["MAX_CONTENT_PATH"] = 5242880  # = 5MB
 Gif = {}  # ?
 
 sessions = dict()  # Dictionnaire qui stoque les sessions des utilisateurs
@@ -57,6 +60,7 @@ def getBoomer(cookie) -> Boomer:
 
 
 @app.route("/")
+@redirect_if_logged
 def page_principale():  # Rendu de la page principale (index.html)
     return render_template("index.html")
 
@@ -86,7 +90,7 @@ def signup():  # Rendu de la page signup (signup.html)  # TODO ajouter un bouton
         hash_ = '"' + sha256(hash_.encode()).hexdigest() + '"'
         age = request.form.get('age')
         username = f'\"{request.form.get("username")}\"'
-        avatar = f'\"{request.form.get("avatar")}\"'
+        avatar = r'"avatar_par_defaut.png"'
         nom = f'\"{request.form.get("nom")}\"'
 
         # TODO Ajouter check voir si email existe deja, un champ vide, etc.
@@ -108,7 +112,6 @@ def utilisateur():  # Rendu de la page utilisateur (utilisateur.html)
     boomer = getBoomer(cookie)
     avatar = boomer.getAvatar()
     uid = boomer.getUid()
-
 
     info = database.select_7_gif_paths()
     temp_profile["paths"] = info
@@ -149,8 +152,6 @@ def gif():  # Rendu de la page principale (index.html)
         if commentaire != '""':
             database.insert_commentaire(commentaire, getBoomer(request.cookies.get("cid")).getUid(), gid)
 
-
-
     Gif["path"] = database.getGifPath(gid)
     Gif["Gid"] = gid
     Gif["comid"] = comid
@@ -183,15 +184,16 @@ def gif():  # Rendu de la page principale (index.html)
     return render_template("gif.html", profile=Gif)
 
 
-
-
 @app.route("/upload.html", methods=["GET", "POST"])
 @redirect_if_not_logged
 def upload():
     if request.method == "POST":
-
+        f = request.files["file"]
+        print(f.filename, f.filename.split(".")[-1])
+        # f.save(str(uuid4()))
         return render_template("upload.html")
     return render_template("upload.html")
+
 
 @app.route("/profileUser.html", methods=["GET", "POST"])
 @redirect_if_not_logged
@@ -209,9 +211,8 @@ def profileUser():
     temp_profile["username"] = boomer.getUsername()
 
     if request.method == "POST":
-
-        return render_template("profileUser.html", profile = temp_profile)
-    return render_template("profileUser.html", profile = temp_profile)
+        return render_template("profileUser.html", profile=temp_profile)
+    return render_template("profileUser.html", profile=temp_profile)
 
 
 @app.route("/gifresponse.html", methods=["GET", "POST"])
@@ -228,7 +229,6 @@ def gifresponse():
     listeReponses = []
     for i in range(len(database.get10Commentaires(Gid))):
         listeReponses.append(database.getReponses(database.get10Commentaires(Gid)[i][2]))
-
 
     temp_profile = {}
     temp_profile["reponses"] = listeReponses
@@ -250,6 +250,7 @@ def gifresponse():
             database.insert_response(reponse, uid, comid)
         return render_template("gif.html", profile=temp_profile)
     return render_template("response.html", profile=temp_profile)
+
 
 if __name__ == "__main__":
     app.run()  # Lancement de l'application Flask

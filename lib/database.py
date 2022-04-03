@@ -122,11 +122,13 @@ def like(gid, uid, dislike):
     request = f"""INSERT INTO note (Dislike, Uid, Gid) VALUES ({dislike}, {uid}, {gid})"""
     cursor.execute(request)
 
+
 def getUserGifs(uid):
     request = f"""SELECT G.path, G.Gid FROM gifs G, cree C WHERE G.gid = C.gid AND C.uid = {uid};"""
     cursor.execute(request)
     gifs = cursor.fetchall()
     return gifs
+
 
 def getFavorisGifs(uid):
     request = f"""SELECT G.path, G.Gid FROM gifs G, favoris F WHERE G.gid = F.gid AND F.uid = {uid};"""
@@ -134,19 +136,23 @@ def getFavorisGifs(uid):
     gifs = cursor.fetchall()
     return gifs
 
+
 def isFavoris(uid, gid):
     request = f"""SELECT F.favid FROM favoris F WHERE F.gid = {gid} AND F.uid = {uid};"""
     cursor.execute(request)
     fav = cursor.fetchone()
     return fav is not None
 
+
 def ajouterFavoris(uid, gid):
     request = f"""INSERT INTO favoris (Uid, Gid) VALUES ({uid}, {gid})"""
     cursor.execute(request)
 
+
 def retirerFavoris(uid, gid):
     request = f"""DELETE FROM favoris WHERE uid={uid} AND gid={gid}"""
     cursor.execute(request)
+
 
 def isCreated(uid, gid):
     request = f"""SELECT C.Creationid FROM cree C WHERE C.gid = {gid} AND C.uid = {uid};"""
@@ -154,17 +160,20 @@ def isCreated(uid, gid):
     create = cursor.fetchone()
     return create is not None
 
+
 def isLiked(uid, gid):
     request = f"""SELECT N.Noteid FROM Note N WHERE N.gid = {gid} AND N.uid = {uid} AND N.dislike = false;"""
     cursor.execute(request)
     like = cursor.fetchone()
     return like is not None
 
+
 def isDisliked(uid, gid):
     request = f"""SELECT N.Noteid FROM Note N WHERE N.gid = {gid} AND N.uid = {uid} AND N.dislike = true;"""
     cursor.execute(request)
     dislike = cursor.fetchone()
     return dislike is not None
+
 
 def ajouterLike(uid, gid):
     if not isCreated(uid, gid):
@@ -180,6 +189,7 @@ def ajouterLike(uid, gid):
             request = f"""INSERT INTO note (Uid, Gid, dislike) VALUES ({uid}, {gid}, false)"""
             cursor.execute(request)
 
+
 def ajouterDislike(uid, gid):
     if not isCreated(uid, gid):
         if isLiked(uid, gid):
@@ -194,11 +204,13 @@ def ajouterDislike(uid, gid):
             request = f"""INSERT INTO note (Uid, Gid, dislike) VALUES ({uid}, {gid}, true)"""
             cursor.execute(request)
 
+
 def getGidByCommentaire(commentaire):
     request = f"""SELECT Gid FROM commentaire WHERE comid = {commentaire};"""
     cursor.execute(request)
     Gid = cursor.fetchone()
     return Gid[0]
+
 
 def getTextByComid(comid):
     request = f"""SELECT texte FROM commentaire WHERE comid = {comid};"""
@@ -206,17 +218,17 @@ def getTextByComid(comid):
     text = cursor.fetchone()
     return text[0]
 
+
 def insert_response(texte, uid, comid):
     request = f"""INSERT INTO reponse (texte, uid, comid) VALUES({texte}, {uid}, {comid});"""
     cursor.execute(request)
+
 
 def getReponses(comid):
     request = f"""SELECT R.texte, U.username FROM Reponse R, utilisateurs U WHERE R.comid = {comid} AND U.uid = R.uid;"""
     cursor.execute(request)
     commentaires = cursor.fetchall()
     return commentaires
-
-
 
 
 if __name__ == "__main__":

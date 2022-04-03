@@ -12,9 +12,9 @@
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/web" />
-        <option value="$MODULE_DIR$/web/css" />
         <option value="$MODULE_DIR$/web/gifs" />
         <option value="$MODULE_DIR$/web/js" />
+        <option value="$MODULE_DIR$/web/css" />
       </list>
     </option>
   </component>
