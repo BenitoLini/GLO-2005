@@ -3,7 +3,6 @@ from lib.boomer import Boomer
 from lib import database
 from hashlib import sha256
 from functools import wraps
-from uuid import uuid4
 
 app = Flask("BoomBird", template_folder="web", static_folder="web\\css")  # Création de l'application FLASK
 app.config["UPLOAD_FOLDER"] = "web\\css\\upload"
@@ -200,10 +199,16 @@ def upload():
 def profileUser():
     uid = request.args.get("uid", default=None, type=str)
     temp_profile = dict()
+
     cookie = ""
     for key in sessions:
         cookie = key
     boomer = getBoomer(cookie)
+
+    # TODO Il ne faut pas utiliser boomer
+
+    # temp_profile = database.getPageInfo(uid)
+
     temp_profile["avatar"] = boomer.getAvatar()
     temp_profile["uid"] = uid
     temp_profile["pathsgifsuser"] = database.getUserGifs(uid)
