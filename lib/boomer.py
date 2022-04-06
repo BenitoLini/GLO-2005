@@ -29,7 +29,10 @@ class Boomer:
 
     def getAvatar(self):
         self.CURSOR.execute(f'SELECT avatar FROM utilisateurs WHERE uid={self.UID};')
-        return self.CURSOR.fetchone()[0]
+        avatar = self.CURSOR.fetchone()[0]
+        if avatar is None:
+            avatar = "https://i.stack.imgur.com/YaL3s.jpg"
+        return avatar
 
     def getHash(self):
         self.CURSOR.execute(f'SELECT hash FROM utilisateurs WHERE uid={self.UID};')

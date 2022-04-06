@@ -102,7 +102,7 @@ def signup():  # Rendu de la page signup (signup.html)  # TODO ajouter un bouton
         return render_template("signup.html")
 
 
-@app.route("/utilisateur.html", methods=["GET"])
+@app.route("/utilisateur.html", methods=["GET", "POST"])
 @redirect_if_not_logged
 def utilisateur():  # Rendu de la page utilisateur (utilisateur.html)
     temp_profile = dict()
@@ -199,16 +199,16 @@ def upload():
 @redirect_if_not_logged
 def profileUser():
     uid = request.args.get("uid", default=None, type=str)
-    temp_profile = dict()
-    cookie = ""
-    for key in sessions:
-        cookie = key
-    boomer = getBoomer(cookie)
-    temp_profile["avatar"] = boomer.getAvatar()
-    temp_profile["uid"] = uid
-    temp_profile["pathsgifsuser"] = database.getUserGifs(uid)
-    temp_profile["pathsgifsfavoris"] = database.getFavorisGifs(uid)
-    temp_profile["username"] = boomer.getUsername()
+    temp_profile = database.getProfileUserByUid(uid)
+    # cookie = ""
+    # for key in sessions:
+    #     cookie = key
+    # boomer = getBoomer(cookie)
+    # temp_profile["avatar"] = boomer.getAvatar()
+    # temp_profile["uid"] = uid
+    # temp_profile["pathsgifsuser"] = database.getUserGifs(uid)
+    # temp_profile["pathsgifsfavoris"] = database.getFavorisGifs(uid)
+    # temp_profile["username"] = boomer.getUsername()
 
     if request.method == "POST":
         return render_template("profileUser.html", profile=temp_profile)

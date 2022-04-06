@@ -230,6 +230,22 @@ def getReponses(comid):
     commentaires = cursor.fetchall()
     return commentaires
 
+def getProfileUserByUid(uid):
+    temp_profile = {}
+    request = f'SELECT avatar FROM utilisateurs WHERE uid={uid};'
+    cursor.execute(request)
+    avatar = cursor.fetchone()[0]
+    if avatar is None:
+        avatar = "https://i.stack.imgur.com/YaL3s.jpg"
+    temp_profile["avatar"] = avatar
+    request = f'SELECT username FROM utilisateurs WHERE uid={uid};'
+    cursor.execute(request)
+    temp_profile["username"] = cursor.fetchone()[0]
+    temp_profile["pathsgifsuser"] = getUserGifs(uid)
+    temp_profile["pathsgifsfavoris"] = getFavorisGifs(uid)
+    temp_profile["uid"] = uid
+    return temp_profile
+
 
 if __name__ == "__main__":
     print(verifierHash("'gabrieljeanson@outlook.fr'", 'test123'))
@@ -237,3 +253,4 @@ if __name__ == "__main__":
     print(getTextByComid(9))
     print(getCommentaires(9))
     print(getReponses(51))
+    print(getProfileUserByUid(44))
