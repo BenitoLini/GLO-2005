@@ -63,6 +63,10 @@ def getBoomer(cookie) -> Boomer:
 @redirect_if_logged
 def page_principale():  # Rendu de la page principale (index.html)
     return render_template("index.html")
+#logique de ce que je comprends
+#faire une méthode SEARCH ; def search()
+#database.SELECT_gif(*) WHERE name LIKE getBarreDeRecherche
+#Pour les onglets, idem, mais avec un LIKE préenregistré ; WHERE name LIKE "sports" / WHERE type =
 
 
 @app.route("/login.html", methods=["GET", "POST"])
@@ -251,6 +255,25 @@ def gifresponse():
         return render_template("gif.html", profile=temp_profile)
     return render_template("response.html", profile=temp_profile)
 
+@app.route("/Search.html",methods=['POST','GET'])
+@redirect_if_not_logged
+def Search():  # Search Bar (index.html)
+    if request.method == 'POST':
+        recherche = request.form.get('searchBar')
+        listeDeGif = database.fonctionRecherche(recherche)
+        temp_profile=dict()
+        temp_profile["paths"] = listeDeGif
+        temp_profile["nomDeRecherche"] = recherche
+        return render_template("Search.html", profile=temp_profile)
+    else:
+        recherche = request.args.get('recherche', default=None, type = str)
+        if recherche == "Reactions":
+            listeDeGif = database.fonctionRecherche('6')
+
+            temp_profile = dict()
+            temp_profile["paths"] = listeDeGif
+            temp_profile["nomDeRecherche"] = recherche
+        return render_template("Search.html", profile=temp_profile)
 
 if __name__ == "__main__":
     app.run()  # Lancement de l'application Flask

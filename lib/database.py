@@ -246,11 +246,13 @@ def getProfileUserByUid(uid):
     temp_profile["uid"] = uid
     return temp_profile
 
+def fonctionRecherche(recherche):
+    request = f"SELECT Gid, Path FROM gifs WHERE Nom LIKE '%{recherche}%';"
+    cursor.execute(request)
+    Gifrecherche = list(cursor.fetchall())
+    return Gifrecherche
+
 
 if __name__ == "__main__":
-    print(verifierHash("'gabrieljeanson@outlook.fr'", 'test123'))
-    print(getGidByCommentaire(1))
-    print(getTextByComid(9))
-    print(getCommentaires(9))
-    print(getReponses(51))
-    print(getProfileUserByUid(44))
+
+    print(fonctionRecherche('oiseau'))

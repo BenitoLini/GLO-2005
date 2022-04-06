@@ -1,3 +1,4 @@
+CREATE DATABASE projetglo2005;
 use projetglo2005;
 
 DROP TABLE IF EXISTS Favoris;
