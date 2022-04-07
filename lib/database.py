@@ -1,5 +1,6 @@
 import pymysql
 import random
+from datetime import datetime
 
 connection = pymysql.connect(
     host="localhost",
@@ -230,6 +231,7 @@ def getReponses(comid):
     commentaires = cursor.fetchall()
     return commentaires
 
+
 def getProfileUserByUid(uid):
     temp_profile = {}
     request = f'SELECT avatar FROM utilisateurs WHERE uid={uid};'
@@ -246,6 +248,7 @@ def getProfileUserByUid(uid):
     temp_profile["uid"] = uid
     return temp_profile
 
+
 def fonctionRecherche(recherche):
     request = f"SELECT Gid, Path FROM gifs WHERE Nom LIKE '%{recherche}%';"
     cursor.execute(request)
@@ -253,6 +256,13 @@ def fonctionRecherche(recherche):
     return Gifrecherche
 
 
-if __name__ == "__main__":
+def ajouterGifCree(nom, story, path, type):
+    date = f"{datetime.now().year}-{('0' if datetime.now().month < 10 else '') + str(datetime.now().month)}-" \
+           f"{('0' if datetime.now().day < 10 else '') + str(datetime.now().day)}"
 
+    path = path.replace("web\\", "").replace("\\", "/")
+    ajout_gif = f"""INSERT INTO gifs (Nom, story, Date, Path, type, NbLike) VALUES ('{nom}', {1 if story else 0}, '{date}', {repr(path)}, '{type}', 0);"""
+    cursor.execute(ajout_gif)
+
+if __name__ == "__main__":
     print(fonctionRecherche('oiseau'))

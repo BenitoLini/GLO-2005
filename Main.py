@@ -3,10 +3,11 @@ from lib.boomer import Boomer
 from lib import database
 from hashlib import sha256
 from functools import wraps
+import os
 from uuid import uuid4
 
-app = Flask("BoomBird", template_folder="web", static_folder="web\\css")  # Création de l'application FLASK
-app.config["UPLOAD_FOLDER"] = "web\\css\\upload"
+app = Flask("BoomBird", template_folder="web", static_folder="web\\static")  # Création de l'application FLASK
+app.config["UPLOAD_FOLDER"] = "web\\static\\gifs"
 app.config["MAX_CONTENT_PATH"] = 5242880  # = 5MB
 Gif = {}  # ?
 
@@ -192,10 +193,22 @@ def gif():  # Rendu de la page principale (index.html)
 @redirect_if_not_logged
 def upload():
     if request.method == "POST":
-        f = request.files["file"]
-        print(f.filename, f.filename.split(".")[-1])
-        # f.save(str(uuid4()))
-        return render_template("upload.html")
+        f = None
+        path = ""
+
+        if len(request.form.get("URL")) != 0:
+            path = request.form.get("URL")
+        else:
+            f = request.files["file"]
+            path = os.path.join(app.config['UPLOAD_FOLDER'], f.filename)
+            f.save(path)
+
+        nom = request.form.get("nom")
+        story = request.form.get("story")
+        type = ("Gifs" if "gif" in f.filename.split(".")[-1] else "Clips") if f is not None else "Gifs"
+
+        database.ajouterGifCree(nom, 1 if story else 0, path, type)
+
     return render_template("upload.html")
 
 
@@ -255,6 +268,7 @@ def gifresponse():
         return render_template("gif.html", profile=temp_profile)
     return render_template("response.html", profile=temp_profile)
 
+
 @app.route("/Search.html",methods=['POST','GET'])
 @redirect_if_not_logged
 def Search():  # Search Bar (index.html)
@@ -274,6 +288,7 @@ def Search():  # Search Bar (index.html)
             temp_profile["paths"] = listeDeGif
             temp_profile["nomDeRecherche"] = recherche
         return render_template("Search.html", profile=temp_profile)
+
 
 if __name__ == "__main__":
     app.run()  # Lancement de l'application Flask

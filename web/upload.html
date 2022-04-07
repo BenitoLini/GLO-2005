@@ -1,17 +1,25 @@
 <html>
 <head>
 <title>Login BoomBird</title>
-<link rel="stylesheet" type="text/css" href="css/csspages.css">
-<script type="text/javascript" src="js/jscode.js"></script>
+<link rel="stylesheet" type="text/css" href="static/css/csspages.css">
+<script type="text/javascript" src="static/js/jscode.js"></script>
 </head>
 <body onload="SupprimerContenu()">
 
 <header>Bonjour, veuillez choisir un fichier .gif</header>
 <br />
 <br />
-<form class="centre" action="upload.html" method="POST">
-  <input type="file" id="file" name="filename" accept="image/gif"> <!-- Ajouter d'autres types à accepter -->
-  <input type="submit">
+<form class="centre" action="upload.html" method="POST" enctype="multipart/form-data">
+  <input style="color: white" type="file" name="file" accept="image/gif"><br /> <!-- Ajouter d'autres types à accepter -->
+    <p style="color: white">OU</p>
+    <p>URL : <input type="text" name="URL"></p>
+
+    <p>Nom : <input type="text" name="nom"></p>
+    <input type="checkbox" id="c1" name="story">
+    <label for="c1" style="color: white">Story</label>
+    <br />
+    <br />
+  <input type="submit" value="upload">
 </form>
 
 </body>
