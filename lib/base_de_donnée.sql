@@ -137,3 +137,6 @@ select * from favoris;
 select * from commentaire;
 select * from reponse;
 select * from utilisateurs;
+
+
+/*UPDATE gifs SET NbClick=1 WHERE Nom LIKE '%1%'

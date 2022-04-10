@@ -5,20 +5,39 @@
 <script type="text/javascript" src="static/js/jscode.js"></script>
 </head>
 <body onload="SupprimerContenu()">
-<header>Bonjour, veuillez entrer vos informations</header>
-<form action="signup.html" method="post">
-<p>
-    Votre nom: <input type="text" name="nom"><br>
-    Votre age: <input type="text" name="age"><br>
-    Votre username: <input type="text" name="username"><br>
-    Votre courriel: <input type="text" name="email"><br>
-    Votre mot de passe: <input type="password" name="hash"><br>
+<style>
+body {
+    background-image:url('https://media1.giphy.com/media/B81XkL3dtnWTe/giphy.gif?cid=ecf05e471c5env2i9fpc7pw586igkznhjwayrellu4qapzcp&rid=giphy.gif&ct=g');
+    background-position: left;
+    background-size: 100% 100%;
+    height: 100vh;
+    padding:0;
+    margin:0;
+}
+</style>
 
-</p><br>
+<li style="position: initial; font-size: 25px" >
+    <a  style=" text-decoration: none; color: white" href="/"> BOOMBIRD (page d'accueil)</a>
+</li>
+
+<br>
+
+<header>Nous sommes heureux que vous vous joignez a notre grande famille !<br> Veuillez entrer vos informations : </header>
+<form action="signup.html" method="post">
+
+   <p style=text-indent:-190px;> Votre nom:<br> <input type="text" name="nom"><br>
+    <p style=text-indent:-195px;> Votre age:<br> <input type="text" name="age"><br>
+    <p style=text-indent:-130px;>Votre username:<br> <input type="text" name="username"><br>
+    <p style=text-indent:-150px;>Votre courriel:<br> <input type="text" name="email"><br>
+    <p style=text-indent:-100px;>Votre mot de passe:<br> <input type="password" name="hash"><br>
+
+<br>
 
     <div class="centre">
-        <input type="submit" value="Identification" name="soumettre">
+        <input type="submit" value="Soumettre" name="soumettre">
     </div>
+    <br>
+    <p>N'oubliez pas de remplir tous les champs ou l'enregistrement ne fonctionnera pas ! </p>
 
 </form>
 

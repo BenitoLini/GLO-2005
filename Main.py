@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response, redirect, url_for
+from flask import Flask, render_template, request, make_response, redirect, url_for, json, jsonify
 from lib.boomer import Boomer
 from lib import database
 from hashlib import sha256
