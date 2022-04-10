@@ -256,13 +256,23 @@ def fonctionRecherche(recherche):
     return Gifrecherche
 
 
-def ajouterGifCree(nom, story, path, type):
+def getGid(nom, story, path, type):
+    request = f"SELECT Gid FROM gifs WHERE Nom='{nom}' AND story='{story}' AND Path='{path}' AND type='{type}';"
+    cursor.execute(request)
+    return cursor.fetchone()[0]
+
+
+def ajouterGifCree(nom, story, path, type, uid):
     date = f"{datetime.now().year}-{('0' if datetime.now().month < 10 else '') + str(datetime.now().month)}-" \
            f"{('0' if datetime.now().day < 10 else '') + str(datetime.now().day)}"
 
     path = path.replace("web\\", "").replace("\\", "/")
     ajout_gif = f"""INSERT INTO gifs (Nom, story, Date, Path, type, NbLike) VALUES ('{nom}', {1 if story else 0}, '{date}', {repr(path)}, '{type}', 0);"""
     cursor.execute(ajout_gif)
+
+    request = f"INSERT INTO cree(Uid, Gid) VALUES ({uid}, {getGid(nom, story, path, type)});"
+    cursor.execute(request)
+
 
 if __name__ == "__main__":
     print(fonctionRecherche('oiseau'))
