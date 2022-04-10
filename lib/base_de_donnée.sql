@@ -139,4 +139,9 @@ select * from reponse;
 select * from utilisateurs;
 
 
-/*UPDATE gifs SET NbClick=1 WHERE Nom LIKE '%1%'
+
+ALTER TABLE gifs ADD NbClick int AFTER NbLike;
+/*UPDATE gifs SET NbClick=1 WHERE Nom LIKE '%1%' */
+ UPDATE gifs SET story=1 WHERE Nom LIKE '%bleu%'
+
+insert into gifs (Nom, story, Date, Path, type, NbLike) VALUES ("bleu", TRUE, '2022-04-10', "https://media.giphy.com/media/wMrDQG1xeCPe/giphy.gif", 'Gifs', 0);

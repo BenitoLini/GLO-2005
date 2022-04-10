@@ -28,6 +28,14 @@ def insert_utilisateur(avatar, hash, email, age, username, nom):
     cursor.execute(request)
 
 
+def ajouter_avatar(uid,gid):
+    Avatar=getGifPath(gid)[0]
+    request = f"""UPDATE utilisateurs SET Avatar="{Avatar}" WHERE uid={uid} """
+    cursor.execute(request)
+
+
+
+
 def select_hash_utilisateur(email):
     request = f"""SELECT * FROM utilisateurs WHERE email={email};"""
     cursor.execute(request)
@@ -55,7 +63,49 @@ def select_7_gif_paths():
     random.shuffle(info)
     if len(info) > 7:
         info = info[0:7]
+    return info
 
+
+def select_Artiste():
+    request = 'SELECT avatar, uid, nom FROM utilisateurs'
+    cursor.execute(request)
+    info = cursor.fetchall()
+    info = list(info)
+    random.shuffle(info)
+    if len(info) > 6:
+        info = info[0:6]
+    return info
+
+def select_Story():
+
+    date = str(datetime.now().year) + "-" + str(datetime.now().month) + "-" + str(datetime.now().day-1)
+    request = f"DELETE FROM gifs WHERE story=true AND date<'{date}'"
+    cursor.execute(request)
+
+    # select LES stories
+    request = f'SELECT path, gid FROM gifs WHERE story=true'
+    cursor.execute(request)
+    info = cursor.fetchall()
+    info = list(info)
+    random.shuffle(info)
+    return info
+
+def select_6_gif_paths_Click():
+    request = 'SELECT path, Gid FROM Gifs ORDER BY NbClick DESC'
+    cursor.execute(request)
+    info = cursor.fetchall()
+    info = list(info)
+    if len(info) > 6:
+        info = info[0:6]
+    return info
+
+def select_6_gif_paths_Like():
+    request = 'SELECT path, Gid FROM Gifs ORDER BY NbLike DESC'
+    cursor.execute(request)
+    info = cursor.fetchall()
+    info = list(info)
+    if len(info) > 6:
+        info = info[0:6]
     return info
 
 
@@ -276,3 +326,4 @@ def ajouterGifCree(nom, story, path, type, uid):
 
 if __name__ == "__main__":
     print(fonctionRecherche('oiseau'))
+

@@ -19,11 +19,12 @@
 </div>
 
 
-<header><h5>{{profile.like[0]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ profile.dislike[0]}}</h5></header>
+<header><h5>{{profile.like[0]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ profile.dislike[0]}}</h5></header>
 
 <header>
     <a href="gif.html?Gid={{profile.Gid}}&like=1" ><button>Like</button></a>
     <a href="gif.html?Gid={{profile.Gid}}&dislike=1" ><button>Dislike</button></a>
+    <a href="gif.html?Gid={{profile.Gid}}&Avatar=1" ><button>Ajouter comme GIF de profil</button></a>
 </header>
 <p>Commentaires</p>
 <form action="gif.html?Gid={{profile.Gid}}&commentaire=1" method="POST">

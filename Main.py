@@ -63,11 +63,15 @@ def getBoomer(cookie) -> Boomer:
 @app.route("/")
 @redirect_if_logged
 def page_principale():  # Rendu de la page principale (index.html)
-    return render_template("index.html")
-#logique de ce que je comprends
-#faire une méthode SEARCH ; def search()
-#database.SELECT_gif(*) WHERE name LIKE getBarreDeRecherche
-#Pour les onglets, idem, mais avec un LIKE préenregistré ; WHERE name LIKE "sports" / WHERE type =
+
+    temp_profile = dict()
+    trending = database.select_6_gif_paths_Click()
+    populaire = database.select_6_gif_paths_Like()
+    temp_profile["trending"] = trending
+    temp_profile["populaire"] = populaire
+    return render_template("index.html", profile=temp_profile)
+
+
 
 
 @app.route("/login.html", methods=["GET", "POST"])
@@ -118,10 +122,13 @@ def utilisateur():  # Rendu de la page utilisateur (utilisateur.html)
     avatar = boomer.getAvatar()
     uid = boomer.getUid()
 
+
     info = database.select_7_gif_paths()
     temp_profile["paths"] = info
     temp_profile["avatar"] = avatar
     temp_profile["uid"] = uid
+    temp_profile["artiste"] = database.select_Artiste()
+    temp_profile["stories"] = database.select_Story()#faire fct et WHERE stories = true
     return render_template("utilisateur.html", profile=temp_profile)
 
 
@@ -132,6 +139,7 @@ def gif():  # Rendu de la page principale (index.html)
     fav = request.args.get("fav", default=None, type=int)
     like = request.args.get("like", default=None, type=int)
     dislike = request.args.get("dislike", default=None, type=int)
+    avatar = request.args.get("Avatar",default=None, type=int)
     commentaire = request.args.get("commentaire", default=None, type=int)
     comid = request.args.get("comid", default=None, type=int)
 
@@ -140,6 +148,9 @@ def gif():  # Rendu de la page principale (index.html)
         cookie = key
     boomer = getBoomer(cookie)
     uid = boomer.getUid()
+    if avatar == 1:
+        database.ajouter_avatar(uid,gid)
+
     if fav == 1:
         if not database.isFavoris(uid, gid):
             database.ajouterFavoris(uid, gid)
