@@ -282,11 +282,31 @@ def Search():  # Search Bar (index.html)
     else:
         recherche = request.args.get('recherche', default=None, type = str)
         if recherche == "Reactions":
-            listeDeGif = database.fonctionRecherche('6')
-
+            listeDeGif = database.fonctionRecherche('1')
             temp_profile = dict()
             temp_profile["paths"] = listeDeGif
             temp_profile["nomDeRecherche"] = recherche
+        elif recherche == "Entertainment":
+            listeDeGif = database.fonctionRecherche('2')
+            temp_profile = dict()
+            temp_profile["paths"] = listeDeGif
+            temp_profile["nomDeRecherche"] = recherche
+        elif recherche == "Sports":
+            listeDeGif = database.fonctionRecherche('3')
+            temp_profile = dict()
+            temp_profile["paths"] = listeDeGif
+            temp_profile["nomDeRecherche"] = recherche
+        elif recherche == "Stickers":
+            listeDeGif = database.fonctionRecherche('4')
+            temp_profile = dict()
+            temp_profile["paths"] = listeDeGif
+            temp_profile["nomDeRecherche"] = recherche
+        elif recherche == "Artists":
+            listeDeGif = database.fonctionRecherche('5')
+            temp_profile = dict()
+            temp_profile["paths"] = listeDeGif
+            temp_profile["nomDeRecherche"] = recherche
+
         return render_template("Search.html", profile=temp_profile)
 
 
