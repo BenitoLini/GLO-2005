@@ -19,29 +19,29 @@
     <a href="/"> BOOMBIRD</a>
 </li>
     <li>
-        <a href="Search.html?recherche=Reactions" title="Section1.html">Reactions</a>
+        <a href="Search.html?recherche=Reactions" title="Reactions d'oiseaux">Reactions</a>
     </li>
     <li>
-        <a href="Search.html?recherche=Entertainment" title="Section2.html">Divertissement</a>
+        <a href="Search.html?recherche=Entertainment" title="Des oiseaux divertisants">Divertissement</a>
     </li>
     <li>
-        <a href="Search.html?recherche=Sports" title="Section2.html">Sports</a>
+        <a href="Search.html?recherche=Sports" title="Oiseaux sportifs">Sports</a>
     </li>
     <li>
-        <a href="Search.html?recherche=Stickers" title="Section2.html">Étampes</a>
+        <a href="Search.html?recherche=Stickers" title="Images d'oiseaux">Étampes</a>
     </li>    <li>
-        <a href="Search.html?recherche=Artists" title="Section2.html">Artistes</a>
+        <a href="Search.html?recherche=Artists" title="La section des artistes">Artistes</a>
     </li>
     <li>
-        <a href="Search.html?recherche=..." title="Section2.html">...</a>
+        <a href="Search.html?recherche=..." title="Autre">...</a>
     </li>
 
 
     <li>
-        <a href="upload.html" title="Section2.html">Téléverser</a>
+        <a href="upload.html" title="Téléverser un GIF">Téléverser</a>
     </li>
     <li>
-        <a href="#" title="Section2.html">Créer</a>
+        <a href="#" title="Créer son GIF">Créer</a>
     </li>
     <li>
         <a href="profileUser.html?uid={{profile.uid}}" ><img src="{{ url_for('static', filename=profile.avatar) }}" width="70" height="70" id="image"></a>
@@ -63,7 +63,6 @@
 {% for P in profile.paths %}
         <a href="gif.html?Gid={{P[1]}}" ><img src={{P[0]}} width="200" height="200" id="image"></a>
 {% endfor %}
-Les gifs les plus cliqués du mois
 <h3>
 
     Artists
@@ -71,11 +70,11 @@ Les gifs les plus cliqués du mois
 
 
 <img src="https://media.giphy.com/media/oFI7FttD0iC8V2Iqmy/giphy.gif" alt="funny GIF" width="20%">
-Gif des artistes et onClick(redirection vers son profil)
+
 <h3>
     Clips
 </h3>
-<div style="width:480px"><iframe allow="fullscreen" frameBorder="0" height="853" src="https://giphy.com/embed/xfHW4n6ZaIZEnZAPZR/video" width="480"></iframe></div>Clips avec de l'audio
+<div style="width:480px"><iframe allow="fullscreen" frameBorder="0" height="853" src="https://giphy.com/embed/xfHW4n6ZaIZEnZAPZR/video" width="480"></iframe></div>'Monte le son !'
 <h3 style="position: relative; margin-left: 45%;">
     Stories du jour
 </h3>

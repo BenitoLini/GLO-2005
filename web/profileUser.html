@@ -16,6 +16,9 @@
     <h1>{{ profile.username }}</h1>
 <!--<p><img src="{{ url_for('static', filename=profile.avatar) }}" width="120" height="120" id="image"></p>-->
 <p><img src="{{ profile.avatar }}" width="120" height="120" id="image"></p>
+
+<p>Pour choisir ton avatar, clique <a href="#">ici</a> !</p>
+
 <p>Gifs de {{ profile.username }}</p>
 {% for P in profile.pathsgifsuser %}
         <a href="gif.html?Gid={{P[1]}}" ><img src={{P[0]}} width="200" height="200" id="image"></a>
