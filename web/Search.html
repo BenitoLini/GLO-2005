@@ -1,6 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--FAIRE UN ICONE // retirer create et upload si pas createur-->
 <head>
     <meta charset="UTF-8">
-    <title>BOOMBIRD</title>
+    <Title>BOOMBIRD</Title>
+
     <link rel="stylesheet" href="static/css/styles.css">
     <script type="text/javascript" src="static/js/jscode.js"></script>
 </head>
@@ -15,25 +19,32 @@
     <a href="/"> BOOMBIRD</a>
 </li>
     <li>
-        <a href="Search.html?recherche=Reactions" title="Section1.html">Reactions</a>
+        <a href="Search.html?recherche=Reactions" title="Reactions d'oiseaux">Reactions</a>
     </li>
     <li>
-        <a href="Search.html?recherche=Entertainment" title="Section2.html">Divertissement</a>
+        <a href="Search.html?recherche=Entertainment" title="Des oiseaux divertisants">Divertissement</a>
     </li>
     <li>
-        <a href="Search.html?recherche=Sports" title="Section2.html">Sports</a>
+        <a href="Search.html?recherche=Sports" title="Oiseaux sportifs">Sports</a>
     </li>
     <li>
-        <a href="Search.html?recherche=Stickers" title="Section2.html">Étampes</a>
+        <a href="Search.html?recherche=Stickers" title="Images d'oiseaux">Étampes</a>
     </li>    <li>
-        <a href="Search.html?recherche=Artists" title="Section2.html">Artistes</a>
+        <a href="Search.html?recherche=Artists" title="La section des artistes">Artistes</a>
     </li>
     <li>
-        <a href="Search.html?recherche=..." title="Section2.html">...</a>
+        <a href="Search.html?recherche=..." title="Autre">...</a>
     </li>
 
+
     <li>
-        <a href="profileUser.html?uid={{profile.uid}}" ><img src="{{ url_for('static', filename=profile.avatar) }}" width="70" height="70" id="image"></a>
+        <a href="upload.html" title="Téléverser un GIF">Téléverser</a>
+    </li>
+    <li>
+        <a href="#" title="Créer son GIF">Créer</a>
+    </li>
+    <li>
+        <a href="profileUser.html?uid={{profile.uid}}" ><img src="{{ profile.avatar }}" width="70" height="70" id="image"></a>
     </li>
 {##}
 
@@ -47,7 +58,7 @@
 </form>
 
 
-<h1 style="color:white" ">Voici les résultats de votre recherche :</h1>
+<h1 style="color:white" ">Voici les résultats de votre recherche " {{ profile.nomDeRecherche }} ":</h1>
 {{recherche}}
 
 {% for P in profile.paths %}

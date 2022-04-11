@@ -60,9 +60,27 @@
 <h3>
     Trending
 </h3>
-{% for P in profile.paths %}
-        <a href="gif.html?Gid={{P[1]}}" ><img src={{P[0]}} width="200" height="200" id="image"></a>
+{% for P in profile.click %}
+        <a href="gif.html?Gid={{P[1]}}&click=1" ><img src={{P[0]}} width="200" height="200" id="image"></a>
 {% endfor %}
+
+
+<h3>
+    Nos gifs les plus aimés
+</h3>
+{% for P in profile.populaire %}
+        <a href="gif.html?Gid={{P[1]}}&click=1" ><img src={{P[0]}} width="200" height="200" id="image"></a>
+{% endfor %}
+
+
+<h3>
+    <a href="Search.html?recherche=all">Découvrez d'autres gifs</a>
+</h3>
+{% for P in profile.random %}
+        <a href="gif.html?Gid={{P[1]}}&click=1" ><img src={{P[0]}} width="200" height="200" id="image"></a>
+{% endfor %}
+
+
 <h3>
 
     Artists

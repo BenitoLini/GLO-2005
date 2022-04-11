@@ -122,9 +122,9 @@ def utilisateur():  # Rendu de la page utilisateur (utilisateur.html)
     avatar = boomer.getAvatar()
     uid = boomer.getUid()
 
-
-    info = database.select_7_gif_paths()
-    temp_profile["paths"] = info
+    temp_profile["click"] = database.select_6_gif_paths_Click()
+    temp_profile["populaire"] = database.select_6_gif_paths_Like()
+    temp_profile["random"] = database.select_7_gif_paths()
     temp_profile["avatar"] = avatar
     temp_profile["uid"] = uid
     temp_profile["artiste"] = database.select_Artiste()
@@ -142,6 +142,10 @@ def gif():  # Rendu de la page principale (index.html)
     avatar = request.args.get("Avatar",default=None, type=int)
     commentaire = request.args.get("commentaire", default=None, type=int)
     comid = request.args.get("comid", default=None, type=int)
+    click = request.args.get("click", default=None, type=int)
+
+    if click == 1:
+        database.ajouterClick(gid)
 
     cookie = ""
     for key in sessions:
@@ -283,10 +287,21 @@ def gifresponse():
 @app.route("/Search.html",methods=['POST','GET'])
 @redirect_if_not_logged
 def Search():  # Search Bar (index.html)
+    cookie = ""
+    for key in sessions:
+        cookie = key
+    boomer = getBoomer(cookie)
+    avatar = boomer.getAvatar()
+    uid = boomer.getUid()
+    print(avatar)
+    print(uid)
     if request.method == 'POST':
         recherche = request.form.get('searchBar')
         listeDeGif = database.fonctionRecherche(recherche)
+
         temp_profile=dict()
+        temp_profile["avatar"] = avatar
+        temp_profile["uid"] = uid
         temp_profile["paths"] = listeDeGif
         temp_profile["nomDeRecherche"] = recherche
         return render_template("Search.html", profile=temp_profile)
@@ -294,29 +309,27 @@ def Search():  # Search Bar (index.html)
         recherche = request.args.get('recherche', default=None, type = str)
         if recherche == "Reactions":
             listeDeGif = database.fonctionRecherche('1')
-            temp_profile = dict()
-            temp_profile["paths"] = listeDeGif
-            temp_profile["nomDeRecherche"] = recherche
+
         elif recherche == "Entertainment":
             listeDeGif = database.fonctionRecherche('2')
-            temp_profile = dict()
-            temp_profile["paths"] = listeDeGif
-            temp_profile["nomDeRecherche"] = recherche
+
         elif recherche == "Sports":
             listeDeGif = database.fonctionRecherche('3')
-            temp_profile = dict()
-            temp_profile["paths"] = listeDeGif
-            temp_profile["nomDeRecherche"] = recherche
+
         elif recherche == "Stickers":
             listeDeGif = database.fonctionRecherche('4')
-            temp_profile = dict()
-            temp_profile["paths"] = listeDeGif
-            temp_profile["nomDeRecherche"] = recherche
+
         elif recherche == "Artists":
             listeDeGif = database.fonctionRecherche('5')
-            temp_profile = dict()
-            temp_profile["paths"] = listeDeGif
-            temp_profile["nomDeRecherche"] = recherche
+
+        elif recherche == "all":
+            listeDeGif = database.select_all_gif_paths()
+
+        temp_profile = dict()
+        temp_profile["avatar"] = avatar
+        temp_profile["uid"] = uid
+        temp_profile["paths"] = listeDeGif
+        temp_profile["nomDeRecherche"] = "Voici tous nos gifs!"
 
         return render_template("Search.html", profile=temp_profile)
 

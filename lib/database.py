@@ -110,7 +110,7 @@ def select_6_gif_paths_Like():
 
 
 def select_all_gif_paths():
-    request = 'SELECT path, Gid FROM Gifs'
+    request = 'SELECT Gid, path FROM Gifs'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -321,6 +321,11 @@ def ajouterGifCree(nom, story, path, type, uid):
     cursor.execute(ajout_gif)
 
     request = f"INSERT INTO cree(Uid, Gid) VALUES ({uid}, {getGid(nom, story, path, type)});"
+    cursor.execute(request)
+
+
+def ajouterClick(Gid):
+    request = f"UPDATE gifs SET Nbclick = Nbclick + 1 WHERE gid='{Gid}';"
     cursor.execute(request)
 
 
