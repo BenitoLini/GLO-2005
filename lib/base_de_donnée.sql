@@ -18,6 +18,7 @@ CREATE TABLE Reponse(Repid integer NOT NULL AUTO_INCREMENT, Comid integer, texte
 CREATE TABLE Note(Noteid integer NOT NULL AUTO_INCREMENT, Dislike boolean, Uid integer, Gid integer, PRIMARY KEY(Noteid), UNIQUE(Uid, Gid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(Uid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid));
 CREATE TABLE Favoris(Favid integer NOT NULL AUTO_INCREMENT, Uid integer, Gid integer, PRIMARY KEY(Favid), UNIQUE(Uid, Gid), FOREIGN KEY(Uid) REFERENCES Utilisateurs(Uid), FOREIGN KEY(Gid) REFERENCES Gifs(Gid));
 ALTER TABLE Gifs ADD NbClick integer DEFAULT 0 AFTER NbLike;
+ALTER TABLE Gifs ADD NbDislike integer DEFAULT 0 AFTER NbLike;
 
 
 DELIMITER //
@@ -45,16 +46,62 @@ DELIMITER ;
 
 DELIMITER //
 
+CREATE PROCEDURE DiminuerLike(Gifsid integer)
+BEGIN
+    UPDATE Gifs G SET G.NbLike = G.NbLike - 1 WHERE G.Gid = Gifsid;
+end //
+
+
+DELIMITER //
+
+CREATE PROCEDURE AugmenterDislike(Gifsid integer)
+BEGIN
+    UPDATE Gifs G SET G.NbDislike = G.NbDislike + 1 WHERE G.Gid = Gifsid;
+end //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE DiminuerDislike(Gifsid integer)
+BEGIN
+    UPDATE Gifs G SET G.NbDislike = G.NbDislike - 1 WHERE G.Gid = Gifsid;
+end //
+
+DELIMITER ;
+
+DELIMITER //
+
 CREATE TRIGGER NombreLike
     AFTER INSERT ON  Note
     FOR EACH ROW
     BEGIN
         IF NEW.Dislike = False THEN
             call AugmenterLike(NEW.Gid);
+        ELSE
+            call AugmenterDislike(NEW.gid);
         end if ;
     end //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER DiminuerNombreLikeDislike
+    AFTER DELETE ON  Note
+    FOR EACH ROW
+    BEGIN
+        IF OLD.Dislike = FALSE THEN
+        call DiminuerLike(OLD.Gid);
+        ELSE
+            call diminuerDislike(OLD.Gid);
+        END IF;
+    end //
+
+DELIMITER ;
+
+
+
 
 
 insert into gifs value(4, "oiseau4", FALSE, '2022-03-16', "https://media.giphy.com/media/hSjOP9Isvq8oWYQiVS/giphy.gif", 'Gifs', 0, 0);

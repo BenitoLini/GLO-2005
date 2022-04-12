@@ -144,14 +144,14 @@ def getGifPath(id):
 
 
 def getGifLike(id):
-    request = f"""SELECT COUNT(*) FROM Note N, Gifs G WHERE G.Gid={id} AND N.Gid = G.gid AND N.dislike = false;"""
+    request = f"""SELECT Nblike FROM Gifs WHERE Gid={id};"""
     cursor.execute(request)
     nblike = cursor.fetchone()
     return nblike
 
 
 def getGifDislike(id):
-    request = f"""SELECT COUNT(*) FROM Note N, Gifs G WHERE G.Gid={id} AND N.Gid = G.gid AND N.dislike = true;"""
+    request = f"""SELECT Nbdislike FROM Gifs G WHERE G.Gid={id};"""
     cursor.execute(request)
     nbdislike = cursor.fetchone()
     return nbdislike
