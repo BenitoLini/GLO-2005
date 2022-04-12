@@ -220,9 +220,10 @@ def upload():
 
         nom = request.form.get("nom")
         story = request.form.get("story")
+        clip = request.form.get("clip")
         type = ("Gifs" if "gif" in f.filename.split(".")[-1] else "Clips") if f is not None else "Gifs"
 
-        database.ajouterGifCree(nom, 1 if story else 0, path, type, getBoomer(request.cookies.get("cid")).getUid())
+        database.ajouterGifCree(nom, 1 if story else 0, 1 if clip else 0, path, type, getBoomer(request.cookies.get("cid")).getUid())
 
     return render_template("upload.html")
 

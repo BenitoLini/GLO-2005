@@ -71,7 +71,7 @@
         <a href="login.html" title="Page de connexion">Se connecter</a>
     </li>
     <li>
-        <a style="margin-left: -50px" href="signup.html" title="Page d'inscription">S'inscrire</a>
+        <a  href="signup.html" title="Page d'inscription">S'inscrire</a>
     </li>
 
 </ul>
@@ -92,31 +92,47 @@
 
 <!---------------------------------------------------------------------------->
 
+<h3 style="position: relative; margin-left: 30%;">
+    Stories du jour (seulement accessible par les   <a href="login.html" title="Section2.html">membres</a> )
+</h3>
 
 <h3>
-    Populaire aujourd'hui:
+    Gifs les plus vus
 </h3>
-{% for P in profile.trending %}
-        <a href="gif.html?Gid={{P[1]}}" ><img src={{P[0]}} width="200" height="200" id="image"></a>
+{% for P in profile.click %}
+        <a href="gif.html?Gid={{P[1]}}&click=1" ><img src={{P[0]}} width="200" height="200" id="image"></a>
 {% endfor %}
 
+
 <h3>
-    Les plus aimés:
+    Gifs les plus aimés
 </h3>
 {% for P in profile.populaire %}
-        <a href="gif.html?Gid={{P[1]}}" ><img src={{P[0]}} width="200" height="200" id="image"></a>
+        <a href="gif.html?Gid={{P[1]}}&click=1" ><img src={{P[0]}} width="200" height="200" id="image"></a>
 {% endfor %}
+
+<h3>
+    <a href="Search.html?recherche=all">Découvrez d'autres gifs</a>
+</h3>
+{% for P in profile.random %}
+        <a href="gif.html?Gid={{P[1]}}&click=1" ><img src={{P[0]}} width="200" height="200" id="image"></a>
+{% endfor %}
+
 <h3>
     Artistes
 </h3>
-<img src="https://media.giphy.com/media/oFI7FttD0iC8V2Iqmy/giphy.gif" alt="funny GIF" width="20%">
+
+{% for P in profile.artiste %}
+        <a href=profileUser.html?uid={{P[1]}} ><img src={{P[0]}} width="50" height="50" id="image"></a>
+        <a href=profileUser.html?uid={{P[1]}} >   {{P[2]}}  </a>&nbsp;&nbsp;&nbsp;
+{% endfor %}
+
+
 <h3>
     Clips
 </h3>
 <div style="width:480px"><iframe allow="fullscreen" frameBorder="0" height="853" src="https://giphy.com/embed/xfHW4n6ZaIZEnZAPZR/video" width="480"></iframe></div>Monte le son !
-<h3 style="position: relative; margin-left: 30%;">
-    Stories du jour (seulement accessible par les   <a href="login.html" title="Section2.html">membres</a> )
-</h3>
+
 
 
 

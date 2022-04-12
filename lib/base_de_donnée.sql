@@ -201,3 +201,8 @@ ALTER TABLE gifs ADD NbClick int AFTER NbLike;
  UPDATE gifs SET story=1 WHERE Nom LIKE '%bleu%'
 
 insert into gifs (Nom, story, Date, Path, type, NbLike) VALUES ("bleu", TRUE, '2022-04-10', "https://media.giphy.com/media/wMrDQG1xeCPe/giphy.gif", 'Gifs', 0);
+
+DROP TRIGGER NombreLike;
+SHOW TRIGGERS ;
+
+ALTER TABLE gifs ADD clip int AFTER story;
