@@ -99,12 +99,11 @@ def signup():  # Rendu de la page signup (signup.html)  # TODO ajouter un bouton
         hash_ = '"' + sha256(hash_.encode()).hexdigest() + '"'
         age = request.form.get('age')
         username = f'\"{request.form.get("username")}\"'
-        avatar = r'"avatar_par_defaut.png"'
         nom = f'\"{request.form.get("nom")}\"'
 
         # TODO Ajouter check voir si email existe deja, un champ vide, etc.
 
-        database.insert_utilisateur(avatar, hash_, email, age, username, nom)
+        database.insert_utilisateur(hash_, email, age, username, nom)
 
         return render_template('login.html')
     else:
@@ -308,8 +307,14 @@ def Search():  # Search Bar (index.html)
         return render_template("Search.html", profile=temp_profile)
     else:
         recherche = request.args.get('recherche', default=None, type = str)
+        temp_profile = dict()
+        if recherche != "":
+            temp_profile["nomDeRecherche"] = recherche
+        else:
+            temp_profile["nomDeRecherche"] = "Voici tous nos gifs!"
         if recherche == "Reactions":
             listeDeGif = database.fonctionRecherche('1')
+
 
         elif recherche == "Entertainment":
             listeDeGif = database.fonctionRecherche('2')
@@ -323,14 +328,13 @@ def Search():  # Search Bar (index.html)
         elif recherche == "Artists":
             listeDeGif = database.fonctionRecherche('5')
 
-        elif recherche == "all":
+        elif recherche == "Tous nos gifs":
             listeDeGif = database.select_all_gif_paths()
 
-        temp_profile = dict()
+
         temp_profile["avatar"] = avatar
         temp_profile["uid"] = uid
         temp_profile["paths"] = listeDeGif
-        temp_profile["nomDeRecherche"] = "Voici tous nos gifs!"
 
         return render_template("Search.html", profile=temp_profile)
 

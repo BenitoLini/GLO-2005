@@ -23,8 +23,8 @@ def getCursos():
     return cursor
 
 
-def insert_utilisateur(avatar, hash, email, age, username, nom):
-    request = f"""INSERT INTO utilisateurs (avatar, hash, email, age, username, nom) VALUE({avatar}, {hash}, {email}, {age}, {username}, {nom});"""
+def insert_utilisateur(hash, email, age, username, nom):
+    request = f"""INSERT INTO utilisateurs (hash, email, age, username, nom) VALUE({hash}, {email}, {age}, {username}, {nom});"""
     cursor.execute(request)
 
 
@@ -312,12 +312,12 @@ def getGid(nom, story, path, type):
     return cursor.fetchone()[0]
 
 
-def ajouterGifCree(nom, story, path, type, uid):
+def ajouterGifCree(nom, story, clip, path, type, uid):
     date = f"{datetime.now().year}-{('0' if datetime.now().month < 10 else '') + str(datetime.now().month)}-" \
            f"{('0' if datetime.now().day < 10 else '') + str(datetime.now().day)}"
 
     path = path.replace("web\\", "").replace("\\", "/")
-    ajout_gif = f"""INSERT INTO gifs (Nom, story, Date, Path, type, NbLike) VALUES ('{nom}', {1 if story else 0}, '{date}', {repr(path)}, '{type}', 0);"""
+    ajout_gif = f"""INSERT INTO gifs (Nom, story, clip, Date, Path, type, NbLike) VALUES ('{nom}', {1 if story else 0}, {1 if clip else 0}, '{date}', {repr(path)}, '{type}', 0);"""
     cursor.execute(ajout_gif)
 
     request = f"INSERT INTO cree(Uid, Gid) VALUES ({uid}, {getGid(nom, story, path, type)});"
