@@ -37,40 +37,6 @@ CREATE TRIGGER AgeUtilisateur
 DELIMITER ;
 
 
-DELIMITER //
-
-CREATE PROCEDURE AugmenterLike(Gifsid integer)
-BEGIN
-    UPDATE Gifs G SET G.NbLike = G.NbLike + 1 WHERE G.Gid = Gifsid;
-end //
-
-DELIMITER ;
-
-DELIMITER //
-
-CREATE PROCEDURE DiminuerLike(Gifsid integer)
-BEGIN
-    UPDATE Gifs G SET G.NbLike = G.NbLike - 1 WHERE G.Gid = Gifsid;
-end //
-
-
-DELIMITER //
-
-CREATE PROCEDURE AugmenterDislike(Gifsid integer)
-BEGIN
-    UPDATE Gifs G SET G.NbDislike = G.NbDislike + 1 WHERE G.Gid = Gifsid;
-end //
-
-DELIMITER ;
-
-DELIMITER //
-
-CREATE PROCEDURE DiminuerDislike(Gifsid integer)
-BEGIN
-    UPDATE Gifs G SET G.NbDislike = G.NbDislike - 1 WHERE G.Gid = Gifsid;
-end //
-
-DELIMITER ;
 
 DELIMITER //
 
@@ -79,9 +45,9 @@ CREATE TRIGGER NombreLike
     FOR EACH ROW
     BEGIN
         IF NEW.Dislike = False THEN
-            call AugmenterLike(NEW.Gid);
+            UPDATE Gifs G SET G.NbLike = G.NbLike + 1 WHERE G.Gid = NEW.Gid;
         ELSE
-            call AugmenterDislike(NEW.gid);
+            UPDATE Gifs G SET G.NbDislike = G.NbDislike + 1 WHERE G.Gid = NEW.Gid;
         end if ;
     end //
 
@@ -94,9 +60,9 @@ CREATE TRIGGER DiminuerNombreLikeDislike
     FOR EACH ROW
     BEGIN
         IF OLD.Dislike = FALSE THEN
-        call DiminuerLike(OLD.Gid);
+        UPDATE Gifs G SET G.NbLike = G.NbLike - 1 WHERE G.Gid = OLD.Gid;
         ELSE
-            call diminuerDislike(OLD.Gid);
+            UPDATE Gifs G SET G.NbDislike = G.NbDislike - 1 WHERE G.Gid = OLD.Gid;
         END IF;
     end //
 
