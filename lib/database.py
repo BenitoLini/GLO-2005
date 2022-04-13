@@ -44,7 +44,7 @@ def select_hash_utilisateur(email):
 
 
 def select_24_gif_paths():
-    request = 'SELECT path, Gid FROM Gifs'
+    request = 'SELECT path, Gid FROM Gifs where clip=false'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -55,14 +55,14 @@ def select_24_gif_paths():
     return info
 
 
-def select_7_gif_paths():
-    request = 'SELECT path, Gid FROM Gifs'
+def select_6_gif_paths():
+    request = 'SELECT path, Gid FROM Gifs where clip=false'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
     random.shuffle(info)
-    if len(info) > 7:
-        info = info[0:7]
+    if len(info) > 6:
+        info = info[0:6]
     return info
 
 
@@ -90,8 +90,18 @@ def select_Story():
     random.shuffle(info)
     return info
 
+def select_clips():
+    request = f'SELECT path, gid FROM gifs WHERE clip=true'
+    cursor.execute(request)
+    info = cursor.fetchall()
+    info = list(info)
+    random.shuffle(info)
+    if len(info) > 6:
+        info = info[0:6]
+    return info
+
 def select_6_gif_paths_Click():
-    request = 'SELECT path, Gid FROM Gifs ORDER BY NbClick DESC'
+    request = 'SELECT path, Gid FROM Gifs WHERE clip = false ORDER BY NbClick DESC'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -100,7 +110,7 @@ def select_6_gif_paths_Click():
     return info
 
 def select_6_gif_paths_Like():
-    request = 'SELECT path, Gid FROM Gifs ORDER BY NbLike DESC'
+    request = 'SELECT path, Gid FROM Gifs WHERE clip = false ORDER BY NbLike DESC'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -110,7 +120,7 @@ def select_6_gif_paths_Like():
 
 
 def select_all_gif_paths():
-    request = 'SELECT Gid, path FROM Gifs'
+    request = 'SELECT Gid, path FROM Gifs where clip = false'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -300,7 +310,7 @@ def getProfileUserByUid(uid):
 
 
 def fonctionRecherche(recherche):
-    request = f"SELECT Gid, Path FROM gifs WHERE Nom LIKE '%{recherche}%';"
+    request = f"SELECT Gid, Path FROM gifs WHERE Nom LIKE '%{recherche}%' AND clip = false;"
     cursor.execute(request)
     Gifrecherche = list(cursor.fetchall())
     return Gifrecherche

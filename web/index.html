@@ -99,7 +99,7 @@
 <h3>
     Gifs les plus vus
 </h3>
-{% for P in profile.click %}
+{% for P in profile.trending %}
         <a href="gif.html?Gid={{P[1]}}&click=1" ><img src={{P[0]}} width="200" height="200" id="image"></a>
 {% endfor %}
 
@@ -131,9 +131,12 @@
 <h3>
     Clips
 </h3>
-<div style="width:480px"><iframe allow="fullscreen" frameBorder="0" height="853" src="https://giphy.com/embed/xfHW4n6ZaIZEnZAPZR/video" width="480"></iframe></div>Monte le son !
+Monte le son! <br>
 
 
+{% for P in profile.clips %}
+        <a href="gif.html?Gid={{P[1]}}&click=1"><iframe src={{ P[0] }} width="500" height="500" id="image" style="position: center; margin-left: 500px; margin-right: 500px"></iframe></a><br>
+{% endfor %}
 
 
 </body>

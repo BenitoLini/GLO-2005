@@ -69,6 +69,9 @@ def page_principale():  # Rendu de la page principale (index.html)
     populaire = database.select_6_gif_paths_Like()
     temp_profile["trending"] = trending
     temp_profile["populaire"] = populaire
+    temp_profile["random"] = database.select_6_gif_paths()
+    temp_profile["artiste"] = database.select_Artiste()
+    temp_profile["clips"] = database.select_clips()
     return render_template("index.html", profile=temp_profile)
 
 
@@ -123,11 +126,12 @@ def utilisateur():  # Rendu de la page utilisateur (utilisateur.html)
 
     temp_profile["click"] = database.select_6_gif_paths_Click()
     temp_profile["populaire"] = database.select_6_gif_paths_Like()
-    temp_profile["random"] = database.select_7_gif_paths()
+    temp_profile["random"] = database.select_6_gif_paths()
     temp_profile["avatar"] = avatar
     temp_profile["uid"] = uid
     temp_profile["artiste"] = database.select_Artiste()
     temp_profile["stories"] = database.select_Story()#faire fct et WHERE stories = true
+    temp_profile["clips"] = database.select_clips()
     return render_template("utilisateur.html", profile=temp_profile)
 
 
@@ -199,6 +203,7 @@ def gif():  # Rendu de la page principale (index.html)
     for i in commentaires:
         commentairesreponses.append(i + (database.getReponses(i[2]),))
     Gif["commentaires"] = commentairesreponses
+    Gif["autreGif"] = database.select_6_gif_paths()
 
     return render_template("gif.html", profile=Gif)
 
@@ -221,6 +226,10 @@ def upload():
         story = request.form.get("story")
         clip = request.form.get("clip")
         type = ("Gifs" if "gif" in f.filename.split(".")[-1] else "Clips") if f is not None else "Gifs"
+        if clip and 'embed' not in path:
+            return render_template("upload.html")
+        if clip and story:
+            return render_template("upload.html")
 
         database.ajouterGifCree(nom, 1 if story else 0, 1 if clip else 0, path, type, getBoomer(request.cookies.get("cid")).getUid())
 
