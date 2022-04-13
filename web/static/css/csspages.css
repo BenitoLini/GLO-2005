@@ -17,6 +17,12 @@ h3 {
     color: white;
 }
 
+h4 {
+    color: red;
+    text-align: center;
+    font-size: xx-large;
+}
+
 .center2 {
     display: block;
   margin-left: auto;

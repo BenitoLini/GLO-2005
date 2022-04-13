@@ -42,7 +42,7 @@
     </li>
 
     <li>
-        <a href="avatar.html" title="Choisi ton avatar">Choisi ton avatar</a>
+        <a href="upload.html" title="Choisi ton avatar">Choisi ton avatar</a>
     </li>
 
     <li>
@@ -59,77 +59,9 @@
     </div>
 </form>
 
-<h3 style="position: relative; margin-left: 45%;">
-    Stories du jour
-</h3>
-
-<!-- carousel inspiré de :  https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_slideshow_rr -->
-{% for P in profile.stories %}
-        <a href="gif.html?Gid={{P[1]}}" ><img class="uneStory" src={{P[0]}} width=80% height="80%" id="image" style="position: center; margin-left: 120px"></a>
+{% for P in profile.gifs %}
+        <a href="utilisateur.html?Avatar=1&Gid={{P[0]}}" ><img src={{P[1]}} width="200" height="200" id="image"></a>
 {% endfor %}
-
-<script>
-var myIndex = 0;
-Stories();
-
-function Stories() {
-  var i;
-  var x = document.getElementsByClassName("uneStory");
-  for (i = 0; i < x.length; i++) {
-    x[i].style.display = "none";
-  }
-  myIndex++;
-  if (myIndex > x.length) {myIndex = 1}
-  x[myIndex-1].style.display = "block";
-  setTimeout(Stories, 5000); // Changement d'images aux 5 secondes
-}
-</script>
-
-
-<h3>
-    Gifs les plus vus
-</h3>
-{% for P in profile.click %}
-        <a href="gif.html?Gid={{P[1]}}&click=1" ><img src={{P[0]}} width="200" height="200" id="image"></a>
-{% endfor %}
-
-
-<h3>
-    Gifs les plus aimés
-</h3>
-{% for P in profile.populaire %}
-        <a href="gif.html?Gid={{P[1]}}&click=1" ><img src={{P[0]}} width="200" height="200" id="image"></a>
-{% endfor %}
-
-
-<h3>
-    <a href="Search.html?recherche=Tous nos gifs">Découvrez d'autres gifs</a>
-</h3>
-{% for P in profile.random %}
-        <a href="gif.html?Gid={{P[1]}}&click=1" ><img src={{P[0]}} width="200" height="200" id="image"></a>
-{% endfor %}
-
-
-<h3>
-    Artistes
-</h3>
-
-{% for P in profile.artiste %}
-        <a href=profileUser.html?uid={{P[1]}} ><img src={{P[0]}} width="50" height="50" id="image"></a>
-        <a href=profileUser.html?uid={{P[1]}} >   {{P[2]}}  </a>&nbsp;&nbsp;&nbsp;
-{% endfor %}
-
-<h3>
-    Clips
-</h3>
-Monte le son! <br>
-
-
-{% for P in profile.clips %}
-        <a href="gif.html?Gid={{P[1]}}&click=1"><iframe src={{ P[0] }} width="500" height="500" id="image" style="position: center; margin-left: 500px; margin-right: 500px"></iframe></a><br>
-{% endfor %}
-
-
 
 
 </body>

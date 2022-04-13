@@ -30,8 +30,10 @@ body {
     <p style=text-indent:-58px;>Votre nom d'utilisateur:<br> <input type="text" name="username"><br>
     <p style=text-indent:-150px;>Votre courriel:<br> <input type="text" name="email"><br>
     <p style=text-indent:-100px;>Votre mot de passe:<br> <input type="password" name="hash"><br>
+{% if message %}
+    <h4>"{{ message }}"</h4>
+{% endif %}
 
-<br>
 
     <div class="centre">
         <input type="submit" value="Soumettre" name="soumettre">
@@ -41,9 +43,7 @@ body {
 
 </form>
 
-{% if message %}
-<div id="cadre">{{ message }}"</div>
-{% endif %}
+
 
 
 </body>

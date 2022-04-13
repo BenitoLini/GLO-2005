@@ -27,6 +27,12 @@ def insert_utilisateur(hash, email, age, username, nom):
     request = f"""INSERT INTO utilisateurs (hash, email, age, username, nom) VALUE({hash}, {email}, {age}, {username}, {nom});"""
     cursor.execute(request)
 
+def utilisateurUnique(email, username):
+    request = f"""SELECT emailEtUsernameUnique({email}, {username})"""
+    cursor.execute(request)
+    unique = cursor.fetchone()
+    return unique
+
 
 def ajouter_avatar(uid,gid):
     Avatar=getGifPath(gid)[0]
@@ -340,5 +346,4 @@ def ajouterClick(Gid):
 
 
 if __name__ == "__main__":
-    print(fonctionRecherche('oiseau'))
-
+    pass
