@@ -23,8 +23,12 @@ def getCursos():
     return cursor
 
 
-def insert_utilisateur(hash, email, age, username, nom):
-    request = f"""INSERT INTO utilisateurs (hash, email, age, username, nom) VALUE({hash}, {email}, {age}, {username}, {nom});"""
+# def insert_utilisateur(hash, email, age, username, nom):
+#     request = f"""INSERT INTO utilisateurs (hash, email, age, username, nom) VALUE({hash}, {email}, {age}, {username}, {nom});"""
+#     cursor.execute(request)
+
+def ajouterUtilisateur(hash, email, age, username, nom):
+    request = f"""call AjouterUser({hash}, {email}, {age}, {username}, {nom})"""
     cursor.execute(request)
 
 def utilisateurUnique(email, username):
@@ -35,11 +39,9 @@ def utilisateurUnique(email, username):
 
 
 def ajouter_avatar(uid,gid):
-    Avatar=getGifPath(gid)[0]
+    Avatar=getGifInfo(gid)[4]
     request = f"""UPDATE utilisateurs SET Avatar="{Avatar}" WHERE uid={uid} """
     cursor.execute(request)
-
-
 
 
 def select_hash_utilisateur(email):
@@ -48,27 +50,16 @@ def select_hash_utilisateur(email):
     user = cursor.fetchone()
     return user
 
-
-def select_24_gif_paths():
+def select_gif_paths(nombre):
     request = 'SELECT path, Gid FROM Gifs where clip=false'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
     random.shuffle(info)
-    if len(info) > 24:
-        info = info[0:24]
-
-    return info
-
-
-def select_6_gif_paths():
-    request = 'SELECT path, Gid FROM Gifs where clip=false'
-    cursor.execute(request)
-    info = cursor.fetchall()
-    info = list(info)
-    random.shuffle(info)
-    if len(info) > 6:
-        info = info[0:6]
+    if nombre == "*":
+        return info
+    if len(info) > nombre:
+        info = info[0:nombre]
     return info
 
 
@@ -124,16 +115,6 @@ def select_6_gif_paths_Like():
         info = info[0:6]
     return info
 
-
-def select_all_gif_paths():
-    request = 'SELECT Gid, path FROM Gifs where clip = false'
-    cursor.execute(request)
-    info = cursor.fetchall()
-    info = list(info)
-    random.shuffle(info)
-    return info
-
-
 def verifierHash(email, hash):
     vraiHash = select_hash_utilisateur(email)
     if vraiHash is None:
@@ -145,32 +126,6 @@ def verifierHash(email, hash):
         return False
 
 
-def getGifNom(id):
-    request = f"""SELECT nom FROM gifs WHERE Gid={id};"""
-    cursor.execute(request)
-    nom = cursor.fetchone()
-    return nom
-
-
-def getGifPath(id):
-    request = f"""SELECT path FROM gifs WHERE Gid={id};"""
-    cursor.execute(request)
-    path = cursor.fetchone()
-    return path
-
-
-def getGifLike(id):
-    request = f"""SELECT Nblike FROM Gifs WHERE Gid={id};"""
-    cursor.execute(request)
-    nblike = cursor.fetchone()
-    return nblike
-
-
-def getGifDislike(id):
-    request = f"""SELECT Nbdislike FROM Gifs G WHERE G.Gid={id};"""
-    cursor.execute(request)
-    nbdislike = cursor.fetchone()
-    return nbdislike
 
 
 def getCommentaires(id):
@@ -184,10 +139,6 @@ def insert_commentaire(texte, uid, gid):
     request = f"""INSERT INTO commentaire (texte, uid, gid) VALUES({texte}, {uid}, {gid});"""
     cursor.execute(request)
 
-
-def like(gid, uid, dislike):
-    request = f"""INSERT INTO note (Dislike, Uid, Gid) VALUES ({dislike}, {uid}, {gid})"""
-    cursor.execute(request)
 
 
 def getUserGifs(uid):
@@ -210,14 +161,20 @@ def isFavoris(uid, gid):
     fav = cursor.fetchone()
     return fav is not None
 
-
-def ajouterFavoris(uid, gid):
-    request = f"""INSERT INTO favoris (Uid, Gid) VALUES ({uid}, {gid})"""
+def isLiked(uid, gid):
+    request = f"""SELECT N.NoteId FROM Note N WHERE N.gid = {gid} AND N.uid = {uid} AND N.dislike = false;"""
     cursor.execute(request)
+    fav = cursor.fetchone()
+    return fav is not None
 
+def isDisliked(uid, gid):
+    request = f"""SELECT N.NoteId FROM Note N WHERE N.gid = {gid} AND N.uid = {uid} AND N.dislike = true;"""
+    cursor.execute(request)
+    fav = cursor.fetchone()
+    return fav is not None
 
-def retirerFavoris(uid, gid):
-    request = f"""DELETE FROM favoris WHERE uid={uid} AND gid={gid}"""
+def addFavoris(uid, gid):
+    request = f"""CALL AjouterFavoris({uid}, {gid});"""
     cursor.execute(request)
 
 
@@ -227,49 +184,15 @@ def isCreated(uid, gid):
     create = cursor.fetchone()
     return create is not None
 
-
-def isLiked(uid, gid):
-    request = f"""SELECT N.Noteid FROM Note N WHERE N.gid = {gid} AND N.uid = {uid} AND N.dislike = false;"""
+def addLike(uid,gid):
+    request = f"""call AjouterLike({uid}, {gid})"""
     cursor.execute(request)
-    like = cursor.fetchone()
-    return like is not None
 
 
-def isDisliked(uid, gid):
-    request = f"""SELECT N.Noteid FROM Note N WHERE N.gid = {gid} AND N.uid = {uid} AND N.dislike = true;"""
+def addDislike(uid,gid):
+    request = f"""call AjouterDislike({uid}, {gid})"""
     cursor.execute(request)
-    dislike = cursor.fetchone()
-    return dislike is not None
 
-
-def ajouterLike(uid, gid):
-    if not isCreated(uid, gid):
-        if isDisliked(uid, gid):
-            request = f"""DELETE FROM note WHERE uid={uid} AND gid={gid}"""
-            cursor.execute(request)
-            request = f"""INSERT INTO note (Uid, Gid, dislike) VALUES ({uid}, {gid}, false)"""
-            cursor.execute(request)
-        elif isLiked(uid, gid):
-            request = f"""DELETE FROM note WHERE uid={uid} AND gid={gid}"""
-            cursor.execute(request)
-        else:
-            request = f"""INSERT INTO note (Uid, Gid, dislike) VALUES ({uid}, {gid}, false)"""
-            cursor.execute(request)
-
-
-def ajouterDislike(uid, gid):
-    if not isCreated(uid, gid):
-        if isLiked(uid, gid):
-            request = f"""DELETE FROM note WHERE uid={uid} AND gid={gid}"""
-            cursor.execute(request)
-            request = f"""INSERT INTO note (Uid, Gid, dislike) VALUES ({uid}, {gid}, true)"""
-            cursor.execute(request)
-        elif isDisliked(uid, gid):
-            request = f"""DELETE FROM note WHERE uid={uid} AND gid={gid}"""
-            cursor.execute(request)
-        else:
-            request = f"""INSERT INTO note (Uid, Gid, dislike) VALUES ({uid}, {gid}, true)"""
-            cursor.execute(request)
 
 
 def getGidByCommentaire(commentaire):
@@ -315,8 +238,9 @@ def getProfileUserByUid(uid):
     return temp_profile
 
 
+
 def fonctionRecherche(recherche):
-    request = f"SELECT Gid, Path FROM gifs WHERE Nom LIKE '%{recherche}%' AND clip = false;"
+    request = f"SELECT Path, Gid FROM gifs WHERE Nom LIKE '%{recherche}%' AND clip = false;"
     cursor.execute(request)
     Gifrecherche = list(cursor.fetchall())
     return Gifrecherche
@@ -344,6 +268,12 @@ def ajouterClick(Gid):
     request = f"UPDATE gifs SET Nbclick = Nbclick + 1 WHERE gid='{Gid}';"
     cursor.execute(request)
 
+def getGifInfo(Gid):
+    request = f"""SELECT Nom, story, clip, Date, Path, type, NbLike, NbDislike, NbClicK FROM gifs where gid = {Gid}"""
+    cursor.execute(request)
+    return cursor.fetchone()
+
 
 if __name__ == "__main__":
-    pass
+    print(getProfileUserByUid(22))
+    print(getGifInfo(3))

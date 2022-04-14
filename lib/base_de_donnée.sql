@@ -40,7 +40,7 @@ DELIMITER ;
 
 DELIMITER //
 
-CREATE TRIGGER NombreLike
+CREATE TRIGGER AumenterNombreLikeDislike
     AFTER INSERT ON  Note
     FOR EACH ROW
     BEGIN
@@ -185,3 +185,78 @@ BEGIN
 end //
 DELIMITER ;
 
+
+DELIMITER //
+CREATE PROCEDURE AjouterFavoris(IN uid integer, IN gid integer)
+BEGIN
+    DECLARE exist boolean;
+    set exist := false;
+    IF exists(SELECT F.favid FROM favoris F WHERE F.gid = gid AND F.uid = uid) then
+        set exist := true;
+    end if ;
+    IF exist = false then
+        INSERT INTO favoris (Uid, Gid) VALUES (uid, gid);
+    ELSE
+        DELETE FROM favoris F WHERE F.Gid=gid AND F.Uid=uid;
+    end if ;
+
+end //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE AjouterLike(IN uid integer, IN gid integer)
+BEGIN
+    DECLARE existLike boolean;
+    DECLARE existDislike boolean;
+    set existLike := false;
+    set existDislike := false;
+    IF exists(SELECT N.Noteid FROM Note N WHERE N.gid = gid AND N.uid = uid AND N.dislike = false) then
+        set existLike := true;
+    ELSEIF exists(SELECT N.Noteid FROM Note N WHERE N.gid = gid AND N.uid = uid AND N.dislike = true) then
+        set existDislike := true;
+    end if ;
+    IF existLike = true then
+        DELETE FROM note N WHERE N.uid=uid AND N.gid=gid;
+    ELSEIF existDislike = true then
+        DELETE FROM note N WHERE N.uid=uid AND N.gid=gid;
+        INSERT INTO note (Uid, Gid, dislike) VALUES (uid, gid, false);
+    ELSE
+        INSERT INTO note (Uid, Gid, dislike) VALUES (uid, gid, false);
+    end if ;
+end //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE AjouterDislike(IN uid integer, IN gid integer)
+BEGIN
+    DECLARE existLike boolean;
+    DECLARE existDislike boolean;
+    set existLike := false;
+    set existDislike := false;
+    IF exists(SELECT N.Noteid FROM Note N WHERE N.gid = gid AND N.uid = uid AND N.dislike = false) then
+        set existLike := true;
+    ELSEIF exists(SELECT N.Noteid FROM Note N WHERE N.gid = gid AND N.uid = uid AND N.dislike = true) then
+        set existDislike := true;
+    end if ;
+    IF existLike = true then
+        DELETE FROM note N WHERE N.uid=uid AND N.gid=gid;
+        INSERT INTO note (Uid, Gid, dislike) VALUES (uid, gid, true);
+    ELSEIF existDislike = true then
+        DELETE FROM note N WHERE N.uid=uid AND N.gid=gid;
+    ELSE
+        INSERT INTO note (Uid, Gid, dislike) VALUES (uid, gid, true);
+    end if ;
+end //
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE AjouterUser(IN hash1 varchar(100), IN email1 varchar(100), IN age1 integer, IN username1 varchar(100), IN nom1 varchar(100))
+BEGIN
+    IF emailEtUsernameUnique(email1, username1) = true AND age1 >= 18 THEN
+        INSERT INTO utilisateurs (hash, email, age, username, nom) VALUE(hash1, email1, age1, username1, nom1);
+    end if ;
+end //
+DELIMITER ;

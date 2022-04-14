@@ -69,7 +69,7 @@ def page_principale():  # Rendu de la page principale (index.html)
     populaire = database.select_6_gif_paths_Like()
     temp_profile["trending"] = trending
     temp_profile["populaire"] = populaire
-    temp_profile["random"] = database.select_6_gif_paths()
+    temp_profile["random"] = database.select_gif_paths(6)
     temp_profile["artiste"] = database.select_Artiste()
     temp_profile["clips"] = database.select_clips()
     return render_template("index.html", profile=temp_profile)
@@ -124,7 +124,7 @@ def signup():  # Rendu de la page signup (signup.html)  # TODO ajouter un bouton
 
         # TODO Ajouter check voir si email existe deja, un champ vide, etc.
 
-        database.insert_utilisateur(hash_, email, age, username, nom)
+        database.ajouterUtilisateur(hash_, email, age, username, nom)
 
         return render_template('login.html')
     else:
@@ -151,7 +151,7 @@ def utilisateur():  # Rendu de la page utilisateur (utilisateur.html)
 
     temp_profile["click"] = database.select_6_gif_paths_Click()
     temp_profile["populaire"] = database.select_6_gif_paths_Like()
-    temp_profile["random"] = database.select_6_gif_paths()
+    temp_profile["random"] = database.select_gif_paths(6)
     temp_profile["avatar"] = avatar
     temp_profile["uid"] = uid
     temp_profile["artiste"] = database.select_Artiste()
@@ -184,32 +184,41 @@ def gif():  # Rendu de la page principale (index.html)
         database.ajouter_avatar(uid,gid)
 
     if fav == 1:
-        if not database.isFavoris(uid, gid):
-            database.ajouterFavoris(uid, gid)
-        else:
-            database.retirerFavoris(uid, gid)
+        database.addFavoris(uid, gid)
 
     if like == 1:
-        database.ajouterLike(uid, gid)
+        database.addLike(uid, gid)
 
     if dislike == 1:
-        database.ajouterDislike(uid, gid)
+        database.addDislike(uid, gid)
 
     if commentaire == 1:
         commentaire = '"' + request.form.get('commentaire') + '"'
         if commentaire != '""':
             database.insert_commentaire(commentaire, getBoomer(request.cookies.get("cid")).getUid(), gid)
 
-    Gif["path"] = database.getGifPath(gid)
+    Gif["path"] = database.getGifInfo(gid)[4]
     Gif["Gid"] = gid
     Gif["comid"] = comid
-    if database.isFavoris(uid, gid):
-        Gif["nom"] = database.getGifNom(gid)[0] + "**"
-    else:
-        Gif["nom"] = database.getGifNom(gid)[0]
 
-    Gif["like"] = database.getGifLike(gid)
-    Gif["dislike"] = database.getGifDislike(gid)
+    Gif["nom"] = database.getGifInfo(gid)[0]
+
+    if database.isLiked(uid,gid) and database.isFavoris(uid, gid):
+        Gif["message"] = "Gif Favoris et Aimé :)"
+    elif database.isLiked(uid,gid) and not database.isFavoris(uid, gid):
+        Gif["message"] = "Gif Aimé :)"
+    elif database.isDisliked(uid,gid) and database.isFavoris(uid, gid):
+        Gif["message"] = "Gif Favoris mais pas aimé :("
+    elif database.isDisliked(uid,gid) and not database.isFavoris(uid, gid):
+        Gif["message"] = "Gif pas aimé :("
+    elif database.isFavoris(uid,gid):
+        Gif["message"] = "Gif Favoris :)"
+    else:
+        Gif["message"] = ""
+
+
+    Gif["like"] = database.getGifInfo(gid)[6]
+    Gif["dislike"] = database.getGifInfo(gid)[7]
 
     liste = []
     for i in database.getCommentaires(gid):
@@ -228,7 +237,7 @@ def gif():  # Rendu de la page principale (index.html)
     for i in commentaires:
         commentairesreponses.append(i + (database.getReponses(i[2]),))
     Gif["commentaires"] = commentairesreponses
-    Gif["autreGif"] = database.select_6_gif_paths()
+    Gif["autreGif"] = database.select_gif_paths(6)
 
     return render_template("gif.html", profile=Gif)
 
@@ -354,10 +363,10 @@ def Search():  # Search Bar (index.html)
             listeDeGif = database.fonctionRecherche(recherche)
 
         elif recherche == "...":
-            listeDeGif = database.select_all_gif_paths()
+            listeDeGif = database.select_gif_paths("*")
 
         elif recherche == "Tous nos gifs":
-            listeDeGif = database.select_all_gif_paths()
+            listeDeGif = database.select_gif_paths("*")
 
 
         temp_profile["avatar"] = avatar
@@ -378,7 +387,7 @@ def choisiravatar():
     uid = boomer.getUid()
 
     temp_profile["uid"] = uid
-    temp_profile["gifs"] = database.select_all_gif_paths()
+    temp_profile["gifs"] = database.select_gif_paths("*")
     temp_profile["avatar"] = avatar
 
     return render_template("avatar.html", profile=temp_profile)

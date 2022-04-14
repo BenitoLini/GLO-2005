@@ -12,14 +12,18 @@
     <a href="utilisateur.html" title="Back">Page principale</a>
 </div>
 <p>{{profile.nom}}</p>
-<img src={{profile.path[0]}} class="center2">
+<img src={{profile.path}} class="center2">
+
+{% if profile.message %}
+    <h4>{{ profile.message }}</h4>
+{% endif %}
 
 <div style="text-align: center">
     <a href="gif.html?Gid={{profile.Gid}}&fav=1" ><button>Ajouter aux favoris</button></a>
 </div>
 
 
-<header><h5>{{profile.like[0]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ profile.dislike[0]}}</h5></header>
+<header><h5>{{profile.like}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ profile.dislike}}</h5></header>
 
 <header>
     <a href="gif.html?Gid={{profile.Gid}}&like=1" ><button>Like</button></a>
