@@ -179,7 +179,7 @@ def addFavoris(uid, gid):
 
 
 def isCreated(uid, gid):
-    request = f"""SELECT C.Creationid FROM cree C WHERE C.gid = {gid} AND C.uid = {uid};"""
+    request = f"""SELECT C.gid FROM cree C WHERE C.gid = {gid} AND C.uid = {uid};"""
     cursor.execute(request)
     create = cursor.fetchone()
     return create is not None
