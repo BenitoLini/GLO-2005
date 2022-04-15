@@ -39,7 +39,7 @@ def utilisateurUnique(email, username):
 
 
 def ajouter_avatar(uid,gid):
-    Avatar=getGifInfo(gid)[4]
+    Avatar=getGifInfo(gid)[3]
     request = f"""UPDATE utilisateurs SET Avatar="{Avatar}" WHERE uid={uid} """
     cursor.execute(request)
 
@@ -51,7 +51,7 @@ def select_hash_utilisateur(email):
     return user
 
 def select_gif_paths(nombre):
-    request = 'SELECT path, Gid FROM Gifs where clip=false'
+    request = 'SELECT path, Gid FROM Gifs where type="Gif"'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -76,11 +76,11 @@ def select_Artiste():
 def select_Story():
 
     date = str(datetime.now().year) + "-" + str(datetime.now().month) + "-" + str(datetime.now().day-1)
-    request = f"DELETE FROM gifs WHERE story=true AND date<'{date}'"
+    request = f"DELETE FROM gifs WHERE type='Story' AND date<'{date}'"
     cursor.execute(request)
 
     # select LES stories
-    request = f'SELECT path, gid FROM gifs WHERE story=true'
+    request = f'SELECT path, gid FROM gifs WHERE type="Story"'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -88,7 +88,7 @@ def select_Story():
     return info
 
 def select_clips():
-    request = f'SELECT path, gid FROM gifs WHERE clip=true'
+    request = f'SELECT path, gid FROM gifs WHERE type="Clip"'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -98,7 +98,7 @@ def select_clips():
     return info
 
 def select_6_gif_paths_Click():
-    request = 'SELECT path, Gid FROM Gifs WHERE clip = false ORDER BY NbClick DESC'
+    request = 'SELECT path, Gid FROM Gifs WHERE type="Gif" ORDER BY NbClick DESC'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -107,7 +107,7 @@ def select_6_gif_paths_Click():
     return info
 
 def select_6_gif_paths_Like():
-    request = 'SELECT path, Gid FROM Gifs WHERE clip = false ORDER BY NbLike DESC'
+    request = 'SELECT path, Gid FROM Gifs WHERE type="Gif" ORDER BY NbLike DESC'
     cursor.execute(request)
     info = cursor.fetchall()
     info = list(info)
@@ -240,27 +240,27 @@ def getProfileUserByUid(uid):
 
 
 def fonctionRecherche(recherche):
-    request = f"SELECT Path, Gid FROM gifs WHERE Nom LIKE '%{recherche}%' AND clip = false;"
+    request = f"SELECT Path, Gid FROM gifs WHERE Nom LIKE '%{recherche}%' AND type='Gif';"
     cursor.execute(request)
     Gifrecherche = list(cursor.fetchall())
     return Gifrecherche
 
 
-def getGid(nom, story, path, type):
-    request = f"SELECT Gid FROM gifs WHERE Nom='{nom}' AND story='{story}' AND Path='{path}' AND type='{type}';"
+def getGid(nom, path):
+    request = f"SELECT Gid FROM gifs WHERE Nom='{nom}' AND Path='{path}';"
     cursor.execute(request)
     return cursor.fetchone()[0]
 
 
-def ajouterGifCree(nom, story, clip, path, type, uid):
+def ajouterGifCree(nom, type, path, uid):
     date = f"{datetime.now().year}-{('0' if datetime.now().month < 10 else '') + str(datetime.now().month)}-" \
            f"{('0' if datetime.now().day < 10 else '') + str(datetime.now().day)}"
 
     path = path.replace("web\\", "").replace("\\", "/")
-    ajout_gif = f"""INSERT INTO gifs (Nom, story, clip, Date, Path, type, NbLike) VALUES ('{nom}', {1 if story else 0}, {1 if clip else 0}, '{date}', {repr(path)}, '{type}', 0);"""
+    ajout_gif = f"""INSERT INTO gifs (Nom, type, Date, Path, NbLike) VALUES ('{nom}', '{type}', '{date}', {repr(path)}, 0);"""
     cursor.execute(ajout_gif)
 
-    request = f"INSERT INTO cree(Uid, Gid) VALUES ({uid}, {getGid(nom, story, path, type)});"
+    request = f"INSERT INTO cree(Uid, Gid) VALUES ({uid}, {getGid(nom, path)});"
     cursor.execute(request)
 
 
@@ -269,7 +269,7 @@ def ajouterClick(Gid):
     cursor.execute(request)
 
 def getGifInfo(Gid):
-    request = f"""SELECT Nom, story, clip, Date, Path, type, NbLike, NbDislike, NbClicK FROM gifs where gid = {Gid}"""
+    request = f"""SELECT Nom, type, Date, Path, NbLike, NbDislike, NbClicK FROM gifs where gid = {Gid}"""
     cursor.execute(request)
     return cursor.fetchone()
 

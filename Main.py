@@ -147,6 +147,7 @@ def utilisateur():  # Rendu de la page utilisateur (utilisateur.html)
         database.ajouter_avatar(uid,gid)
 
     avatar = boomer.getAvatar()
+    print(avatar)
 
 
     temp_profile["click"] = database.select_6_gif_paths_Click()
@@ -197,7 +198,7 @@ def gif():  # Rendu de la page principale (index.html)
         if commentaire != '""':
             database.insert_commentaire(commentaire, getBoomer(request.cookies.get("cid")).getUid(), gid)
 
-    Gif["path"] = database.getGifInfo(gid)[4]
+    Gif["path"] = database.getGifInfo(gid)[3]
     Gif["Gid"] = gid
     Gif["comid"] = comid
 
@@ -217,8 +218,8 @@ def gif():  # Rendu de la page principale (index.html)
         Gif["message"] = ""
 
 
-    Gif["like"] = database.getGifInfo(gid)[6]
-    Gif["dislike"] = database.getGifInfo(gid)[7]
+    Gif["like"] = database.getGifInfo(gid)[4]
+    Gif["dislike"] = database.getGifInfo(gid)[5]
 
     liste = []
     for i in database.getCommentaires(gid):
@@ -259,13 +260,18 @@ def upload():
         nom = request.form.get("nom")
         story = request.form.get("story")
         clip = request.form.get("clip")
-        type = ("Gifs" if "gif" in f.filename.split(".")[-1] else "Clips") if f is not None else "Gifs"
         if clip and 'embed' not in path:
             return render_template("upload.html")
         if clip and story:
             return render_template("upload.html")
+        if story:
+            type = 'Story'
+        elif clip:
+            type = 'Clip'
+        else:
+            type='Gif'
 
-        database.ajouterGifCree(nom, 1 if story else 0, 1 if clip else 0, path, type, getBoomer(request.cookies.get("cid")).getUid())
+        database.ajouterGifCree(nom, type, path, getBoomer(request.cookies.get("cid")).getUid())
 
     return render_template("upload.html")
 
