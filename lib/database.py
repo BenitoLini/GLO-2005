@@ -141,7 +141,7 @@ def insert_commentaire(texte, uid, gid):
 
 
 def getUserGifs(uid):
-    request = f"""SELECT G.path, G.Gid FROM gifs G, cree C WHERE G.gid = C.gid AND C.uid = {uid};"""
+    request = f"""SELECT G.path, G.Gid FROM gifs G, cree C WHERE G.gid = C.gid AND C.uid = {uid} AND type = "gif";"""
     cursor.execute(request)
     gifs = cursor.fetchall()
     return gifs
