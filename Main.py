@@ -356,7 +356,7 @@ def Search():  # Search Bar (index.html)
             listeDeGif = database.fonctionRecherche("cute")
 
         elif recherche == "bleu":
-            listeDeGif = database.fonctionRecherche(recherche)
+            listeDeGif = database.fonctionRecherche("blue")
 
         elif recherche == "danse":
             listeDeGif = database.fonctionRecherche(recherche)
