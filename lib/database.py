@@ -18,18 +18,15 @@ def getConnection():
     return connection
 
 
-def getCursos():
+def getCursor():
     global cursor
     return cursor
 
 
-# def insert_utilisateur(hash, email, age, username, nom):
-#     request = f"""INSERT INTO utilisateurs (hash, email, age, username, nom) VALUE({hash}, {email}, {age}, {username}, {nom});"""
-#     cursor.execute(request)
-
 def ajouterUtilisateur(hash, email, age, username, nom):
     request = f"""call AjouterUser({hash}, {email}, {age}, {username}, {nom})"""
     cursor.execute(request)
+
 
 def utilisateurUnique(email, username):
     request = f"""SELECT emailEtUsernameUnique({email}, {username})"""
@@ -38,8 +35,8 @@ def utilisateurUnique(email, username):
     return unique
 
 
-def ajouter_avatar(uid,gid):
-    Avatar=getGifInfo(gid)[3]
+def ajouter_avatar(uid, gid):
+    Avatar = getGifInfo(gid)[3]
     request = f"""UPDATE utilisateurs SET Avatar="{Avatar}" WHERE uid={uid} """
     cursor.execute(request)
 
@@ -49,6 +46,7 @@ def select_hash_utilisateur(email):
     cursor.execute(request)
     user = cursor.fetchone()
     return user
+
 
 def select_gif_paths(nombre):
     request = 'SELECT path, Gid FROM Gifs where type="Gif"'
@@ -73,9 +71,9 @@ def select_Artiste():
         info = info[0:6]
     return info
 
-def select_Story():
 
-    date = str(datetime.now().year) + "-" + str(datetime.now().month) + "-" + str(datetime.now().day-1)
+def select_Story():
+    date = str(datetime.now().year) + "-" + str(datetime.now().month) + "-" + str(datetime.now().day - 1)
     request = f"DELETE FROM gifs WHERE type='Story' AND date<'{date}'"
     cursor.execute(request)
 
@@ -87,6 +85,7 @@ def select_Story():
     random.shuffle(info)
     return info
 
+
 def select_clips():
     request = f'SELECT path, gid FROM gifs WHERE type="Clip"'
     cursor.execute(request)
@@ -97,6 +96,7 @@ def select_clips():
         info = info[0:6]
     return info
 
+
 def select_6_gif_paths_Click():
     request = 'SELECT path, Gid FROM Gifs WHERE type="Gif" ORDER BY NbClick DESC'
     cursor.execute(request)
@@ -106,6 +106,7 @@ def select_6_gif_paths_Click():
         info = info[0:6]
     return info
 
+
 def select_6_gif_paths_Like():
     request = 'SELECT path, Gid FROM Gifs WHERE type="Gif" ORDER BY NbLike DESC'
     cursor.execute(request)
@@ -114,6 +115,7 @@ def select_6_gif_paths_Like():
     if len(info) > 6:
         info = info[0:6]
     return info
+
 
 def verifierHash(email, hash):
     vraiHash = select_hash_utilisateur(email)
@@ -126,8 +128,6 @@ def verifierHash(email, hash):
         return False
 
 
-
-
 def getCommentaires(id):
     request = f"""SELECT DISTINCT C.texte, U.username, C.comid FROM Utilisateurs U INNER JOIN Commentaire C ON U.uid = C.uid WHERE C.Gid = {id};"""
     cursor.execute(request)
@@ -138,7 +138,6 @@ def getCommentaires(id):
 def insert_commentaire(texte, uid, gid):
     request = f"""INSERT INTO commentaire (texte, uid, gid) VALUES({texte}, {uid}, {gid});"""
     cursor.execute(request)
-
 
 
 def getUserGifs(uid):
@@ -161,17 +160,20 @@ def isFavoris(uid, gid):
     fav = cursor.fetchone()
     return fav is not None
 
+
 def isLiked(uid, gid):
     request = f"""SELECT N.NoteId FROM Note N WHERE N.gid = {gid} AND N.uid = {uid} AND N.dislike = false;"""
     cursor.execute(request)
     fav = cursor.fetchone()
     return fav is not None
 
+
 def isDisliked(uid, gid):
     request = f"""SELECT N.NoteId FROM Note N WHERE N.gid = {gid} AND N.uid = {uid} AND N.dislike = true;"""
     cursor.execute(request)
     fav = cursor.fetchone()
     return fav is not None
+
 
 def addFavoris(uid, gid):
     request = f"""CALL AjouterFavoris({uid}, {gid});"""
@@ -184,15 +186,15 @@ def isCreated(uid, gid):
     create = cursor.fetchone()
     return create is not None
 
-def addLike(uid,gid):
+
+def addLike(uid, gid):
     request = f"""call AjouterLike({uid}, {gid})"""
     cursor.execute(request)
 
 
-def addDislike(uid,gid):
+def addDislike(uid, gid):
     request = f"""call AjouterDislike({uid}, {gid})"""
     cursor.execute(request)
-
 
 
 def getGidByCommentaire(commentaire):
@@ -238,7 +240,6 @@ def getProfileUserByUid(uid):
     return temp_profile
 
 
-
 def fonctionRecherche(recherche):
     request = f"SELECT Path, Gid FROM gifs WHERE Nom LIKE '%{recherche}%' AND type='Gif';"
     cursor.execute(request)
@@ -267,6 +268,7 @@ def ajouterGifCree(nom, type, path, uid):
 def ajouterClick(Gid):
     request = f"UPDATE gifs SET Nbclick = Nbclick + 1 WHERE gid='{Gid}';"
     cursor.execute(request)
+
 
 def getGifInfo(Gid):
     request = f"""SELECT Nom, type, Date, Path, NbLike, NbDislike, NbClicK FROM gifs where gid = {Gid}"""
